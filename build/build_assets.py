@@ -310,26 +310,81 @@ def techstack():
 
 # ---------- footer ----------
 
-def footer_swing():
-    W, H = 1400, 230
-    ax = 700
+def footer_swing(mobile=False):
+    """Last panel of the comic: the spider swings over the city, 'to be continued'."""
+    W, H = (600, 700) if mobile else (1400, 440)
+    sans = "font-family=\"'Segoe UI',Helvetica,Arial,sans-serif\""
     spline = 'calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1"'
+    bldg, windows = skyline(H - 6, rng_seed=5, h_range=(70, 190) if not mobile else (80, 220))
+
+    def title(text, x, y, size, anchor):
+        return "".join(
+            f'<text class="c" x="{x + d}" y="{y + d}" text-anchor="{anchor}" font-size="{size}" fill="{c}" stroke="{INK}" '
+            f'stroke-width="9" stroke-linejoin="round" paint-order="stroke">{text}</text>'
+            for d, c in ((6, BLUE), (0, RED))
+        )
+
+    if mobile:
+        heading = title("THANKS FOR", 300, 110, 92, "middle") + title("SWINGING BY!", 300, 205, 92, "middle")
+        ax, ay, length = 300, 230, 170
+        moon = (480, 430, 44)
+        cap_x, cap_y, cap_w = 90, 552, 420
+        next_y = 668
+    else:
+        heading = title("THANKS FOR", 60, 130, 104, "start") + title("SWINGING BY!", 60, 238, 104, "start")
+        ax, ay, length = 1070, 6, 200
+        moon = (700, 100, 46)
+        cap_x, cap_y, cap_w = 880, 300, 440
+        next_y = 280
+
+    mx, my, mr = moon
+    scene = (
+        f'<radialGradient id="fglow"><stop offset="0" stop-color="#F3EBD3" stop-opacity=".35"/>'
+        '<stop offset="1" stop-color="#F3EBD3" stop-opacity="0"/></radialGradient>'
+        f'<circle cx="{mx}" cy="{my}" r="{mr * 2.2}" fill="url(#fglow)"/><circle cx="{mx}" cy="{my}" r="{mr}" fill="#F3EBD3"/>'
+        f'<g fill="#16213D">{bldg}</g><g fill="#FFE45C">{windows}</g>'
+    )
+    swing = (
+        f'<g><line x1="{ax}" y1="{ay}" x2="{ax}" y2="{ay + length}" stroke="#E6EDF3" stroke-width="3"/>'
+        f'<g transform="translate({ax - 45} {ay + length - 18}) scale(2.8)">{spider_shape(INK, 3.4)}</g>'
+        f'<g transform="translate({ax - 45} {ay + length - 18}) scale(2.8)">{spider_shape(RED, 2)}</g>'
+        f'<animateTransform attributeName="transform" type="rotate" values="-50 {ax} {ay};50 {ax} {ay};-50 {ax} {ay}" '
+        f'dur="3.4s" {spline} repeatCount="indefinite"/></g>'
+    )
+    thwip = "".join(
+        f'<text class="c" x="{x}" y="{y}" text-anchor="middle" font-size="44" fill="{fill}" stroke="{INK}" stroke-width="6" '
+        f'paint-order="stroke" transform="rotate({rot} {x} {y})">THWIP!'
+        f'<animate attributeName="opacity" values="{vals}" keyTimes="{kt}" dur="3.4s" repeatCount="indefinite"/></text>'
+        for x, y, fill, rot, vals, kt in (
+            (ax - length - 40, ay + length * 0.55, "#fff", -8, "0;0;1;0;0", "0;.4;.5;.6;1"),
+            (ax + length + 40, ay + length * 0.55, "#FFE45C", 8, "1;0;0;1", "0;.1;.9;1"),
+        )
+    )
+    ending = (
+        f'<g transform="rotate(-3 {cap_x + cap_w / 2} {cap_y + 40})">'
+        f'<rect x="{cap_x + 8}" y="{cap_y + 8}" width="{cap_w}" height="76" fill="{BLUE}" stroke="{INK}" stroke-width="5"/>'
+        f'<rect x="{cap_x}" y="{cap_y}" width="{cap_w}" height="76" fill="#FFE45C" stroke="{INK}" stroke-width="5"/>'
+        f'<text class="c" x="{cap_x + cap_w / 2}" y="{cap_y + 54}" text-anchor="middle" font-size="46" letter-spacing="3" '
+        f'fill="{INK}">TO BE CONTINUED...</text></g>'
+    )
+    nxt_x = cap_x + cap_w / 2 if mobile else 60
+    nxt_anchor = "middle" if mobile else "start"
+    nxt = (
+        f'<text x="{nxt_x}" y="{next_y}" text-anchor="{nxt_anchor}" {sans} font-weight="700" font-size="28" fill="#F0F3F6" '
+        f'stroke="{INK}" stroke-width="6" paint-order="stroke">Next issue: whatever I ship next.</text>'
+    )
     return (
-        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>{FONT_CSS}</defs>'
-        # faint arc showing the swing path
-        f'<path d="M{ax - 150} 100 Q{ax} 240 {ax + 150} 100" stroke="{WEB}" stroke-width="2" '
-        'stroke-dasharray="2 12" stroke-linecap="round" fill="none" opacity=".6"/>'
-        f'<g><line x1="{ax}" y1="0" x2="{ax}" y2="150" stroke="{WEB}" stroke-width="2.5"/>'
-        f'<g transform="translate({ax - 40} 140) scale(2.5)">{spider_shape(RED, 2)}</g>'
-        f'<animateTransform attributeName="transform" type="rotate" values="-42 {ax} 0;42 {ax} 0;-42 {ax} 0" '
-        f'dur="3.2s" {spline} repeatCount="indefinite"/></g>'
-        f'<text class="c" x="{ax - 330}" y="130" text-anchor="middle" font-size="40" fill="{BLUE_LT}" '
-        f'stroke="{INK}" stroke-width="5" paint-order="stroke" transform="rotate(-6 {ax - 330} 130)">THWIP!'
-        '<animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;.38;.5;.62;1" dur="3.2s" repeatCount="indefinite"/></text>'
-        f'<text class="c" x="{ax + 330}" y="130" text-anchor="middle" font-size="40" fill="{RED}" '
-        f'stroke="{INK}" stroke-width="5" paint-order="stroke" transform="rotate(6 {ax + 330} 130)">THWIP!'
-        '<animate attributeName="opacity" values="1;0;0;1" keyTimes="0;.12;.88;1" dur="3.2s" repeatCount="indefinite"/></text>'
-        "</svg>"
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>{FONT_CSS}'
+        '<pattern id="fd" width="16" height="16" patternUnits="userSpaceOnUse">'
+        f'<circle cx="8" cy="8" r="3" fill="{BLUE}"/></pattern>'
+        '<linearGradient id="ff" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".45"/>'
+        '<stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+        f'<mask id="fm"><rect width="{W}" height="{H}" fill="url(#ff)"/></mask>'
+        f'<clipPath id="fc"><rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22"/></clipPath></defs>'
+        f'<rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22" fill="#0E1526"/>'
+        f'<g clip-path="url(#fc)"><rect width="{W}" height="{H}" fill="url(#fd)" mask="url(#fm)"/>{scene}{swing}</g>'
+        f'<rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22" fill="none" stroke="{RED}" stroke-width="6"/>'
+        f"{heading}{thwip}{nxt}{ending}</svg>"
     )
 
 

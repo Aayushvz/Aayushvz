@@ -68,5 +68,5 @@
 <br>
 
 <div align="center">
-<img src="assets/footer-swing.svg" width="100%"/>
+<picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/footer-swing.svg"><img src="assets/footer-swing.svg" width="100%" alt="Thanks for swinging by! To be continued..."/></picture>
 </div>
