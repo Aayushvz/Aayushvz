@@ -5,14 +5,7 @@
 <br>
 
 <div align="center">
-
-> I design it, I build it, I swing back and fix what broke.
->
-> Somewhere between Figma and VS Code, that's where I live.
-> The suit changes. The city changes. The web stays.
->
-> **With great design comes great responsibility.**
-
+<img src="assets/tagline.svg" width="100%" alt="I design it. I build it. I swing back and fix what broke. Somewhere between Figma and VS Code, that's where I live. With great design comes great responsibility."/>
 </div>
 
 <img src="assets/web-divider.svg" width="100%"/>

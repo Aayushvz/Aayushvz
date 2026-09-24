@@ -743,8 +743,108 @@ def hero_profile():
     )
 
 
+# ---------- tagline: three-panel comic strip ----------
+
+def tagline():
+    W, H = 1400, 600
+    sans = "font-family=\"'Segoe UI',Helvetica,Arial,sans-serif\""
+    spline = 'calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1"'
+    pw, ph, py, gap = 440, 360, 14, 20
+    xs = [14 + i * (pw + gap) for i in range(3)]
+
+    def panel(x, fill, dots, body, caption, cap_w, rot):
+        cid = f"p{x}"
+        return (
+            f'<clipPath id="{cid}"><rect x="{x}" y="{py}" width="{pw}" height="{ph}" rx="10"/></clipPath>'
+            f'<g clip-path="url(#{cid})"><rect x="{x}" y="{py}" width="{pw}" height="{ph}" fill="{fill}"/>'
+            f'<rect x="{x}" y="{py}" width="{pw}" height="{ph}" fill="url(#{dots})"/>{body}</g>'
+            f'<rect x="{x}" y="{py}" width="{pw}" height="{ph}" rx="10" fill="none" stroke="{INK}" stroke-width="7"/>'
+            f'<g transform="rotate({rot} {x + 30 + cap_w / 2} {py + 44})">'
+            f'<rect x="{x + 24}" y="{py + 22}" width="{cap_w}" height="48" fill="#FFE45C" stroke="{INK}" stroke-width="4"/>'
+            f'<text class="c" x="{x + 24 + cap_w / 2}" y="{py + 58}" text-anchor="middle" font-size="34" letter-spacing="2" '
+            f'fill="{INK}">{caption}</text></g>'
+        )
+
+    # 1: a pen-tool curve drawing itself, with handles
+    x = xs[0]
+    curve = f"M{x + 70} {py + 290} C{x + 140} {py + 120} {x + 300} {py + 330} {x + 370} {py + 150}"
+    p1 = (
+        f'<path d="{curve}" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="520 520">'
+        f'<animate attributeName="stroke-dashoffset" values="520;0;0;520" keyTimes="0;.45;.85;1" dur="4s" repeatCount="indefinite"/></path>'
+        f'<g stroke="#fff" stroke-width="3"><line x1="{x + 70}" y1="{py + 290}" x2="{x + 140}" y2="{py + 120}"/>'
+        f'<line x1="{x + 370}" y1="{py + 150}" x2="{x + 300}" y2="{py + 330}"/></g>'
+        + "".join(
+            f'<rect x="{cx - 10}" y="{cy - 10}" width="20" height="20" fill="{INK}" stroke="#fff" stroke-width="4"/>'
+            for cx, cy in ((x + 70, py + 290), (x + 370, py + 150))
+        )
+        + "".join(
+            f'<circle cx="{cx}" cy="{cy}" r="9" fill="#fff" stroke="{INK}" stroke-width="3"/>'
+            for cx, cy in ((x + 140, py + 120), (x + 300, py + 330))
+        )
+        # cursor riding along the curve
+        + f'<path d="M0 0 L0 34 L9 26 L16 42 L23 39 L16 23 L28 23 Z" fill="{INK}" stroke="#fff" stroke-width="3" stroke-linejoin="round">'
+        f'<animateMotion path="{curve}" dur="4s" keyPoints="0;1;1;0" keyTimes="0;.45;.85;1" calcMode="linear" repeatCount="indefinite"/></path>'
+    )
+
+    # 2: big code brackets with a blinking caret
+    x = xs[1]
+    p2 = (
+        f'<text class="c" x="{x + pw / 2 - 14}" y="{py + 262}" text-anchor="middle" font-size="190" fill="#fff" '
+        f'stroke="{INK}" stroke-width="10" stroke-linejoin="round" paint-order="stroke">&lt;/&gt;</text>'
+        f'<rect x="{x + pw / 2 + 130}" y="{py + 130}" width="18" height="140" fill="#FFE45C" stroke="{INK}" stroke-width="4">'
+        '<animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.5;.5;1" dur="1.1s" repeatCount="indefinite"/></rect>'
+        f'<text x="{x + 40}" y="{py + 330}" {sans} font-weight="700" font-size="22" fill="#fff" opacity=".85">npm run build  ✓ compiled</text>'
+    )
+
+    # 3: the spider swinging back over the city
+    x = xs[2]
+    bldg = []
+    for i, (bw, bh) in enumerate(((70, 90), (60, 140), (90, 70), (55, 120), (80, 100), (70, 60))):
+        bx = x + sum(w for w, _ in ((70, 90), (60, 140), (90, 70), (55, 120), (80, 100), (70, 60))[:i])
+        bldg.append(f'<rect x="{bx}" y="{py + ph - bh}" width="{bw - 4}" height="{bh}"/>')
+    ax = x + pw / 2 + 20
+    p3 = (
+        f'<g fill="#16213D">{"".join(bldg)}</g>'
+        f'<g><line x1="{ax}" y1="{py}" x2="{ax}" y2="{py + 200}" stroke="#fff" stroke-width="3"/>'
+        f'<g transform="translate({ax - 44} {py + 180}) scale(2.75)">{spider_shape(RED, 2)}</g>'
+        f'<animateTransform attributeName="transform" type="rotate" values="-35 {ax} {py};35 {ax} {py};-35 {ax} {py}" '
+        f'dur="3s" {spline} repeatCount="indefinite"/></g>'
+        f'<text class="c" x="{x + 330}" y="{py + 140}" text-anchor="middle" font-size="44" fill="#fff" stroke="{INK}" '
+        f'stroke-width="6" paint-order="stroke" transform="rotate(10 {x + 330} {py + 140})">THWIP!'
+        '<animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;.4;.5;.62;1" dur="3s" repeatCount="indefinite"/></text>'
+    )
+
+    narration = (
+        f'<g transform="rotate(-.6 700 452)"><rect x="{40 + 7}" y="{400 + 7}" width="1320" height="92" fill="{BLUE}" stroke="{INK}" stroke-width="4"/>'
+        f'<rect x="40" y="400" width="1320" height="92" fill="#FFE45C" stroke="{INK}" stroke-width="4"/>'
+        f'<text x="700" y="438" text-anchor="middle" {sans} font-weight="700" font-size="26" fill="{INK}">'
+        "Somewhere between Figma and VS Code, that's where I live.</text>"
+        f'<text x="700" y="474" text-anchor="middle" {sans} font-weight="700" font-size="26" fill="{INK}">'
+        "The suit changes. The city changes. The web stays.</text></g>"
+    )
+    motto = (
+        f'<text class="c" x="706" y="{576 + 5}" text-anchor="middle" font-size="58" letter-spacing="1" fill="{BLUE}" '
+        f'stroke="{INK}" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WITH GREAT DESIGN COMES GREAT RESPONSIBILITY.</text>'
+        f'<text class="c" x="700" y="576" text-anchor="middle" font-size="58" letter-spacing="1" fill="{RED}" '
+        f'stroke="{INK}" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WITH GREAT DESIGN COMES GREAT RESPONSIBILITY.</text>'
+    )
+
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>{FONT_CSS}'
+        '<pattern id="dr" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r="3" fill="#B72B37"/></pattern>'
+        '<pattern id="db" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r="3" fill="#1F3FA8"/></pattern>'
+        '<pattern id="dn" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r="2.4" fill="#1B274A"/></pattern>'
+        "</defs>"
+        + panel(xs[0], RED, "dr", p1, "I DESIGN IT.", 230, -2)
+        + panel(xs[1], BLUE, "db", p2, "I BUILD IT.", 210, 1.5)
+        + panel(xs[2], "#0E1526", "dn", p3, "I SWING BACK &amp; FIX IT.", 340, -1.5)
+        + narration + motto + "</svg>"
+    )
+
+
 if __name__ == "__main__":
     ASSETS.mkdir(exist_ok=True)
+    write("tagline.svg", tagline())
     write("hero-profile.svg", hero_profile())
     write("spider-signal.svg", spider_signal())
     (ASSETS / "contact").mkdir(exist_ok=True)
