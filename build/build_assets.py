@@ -465,9 +465,10 @@ PROJECTS = [
     ("coursebot", "COURSE FINDER", "BOT", "AI", "AI!",
      "Gemini-powered chatbot that finds courses by interest, domain, skill level and duration.",
      ["Python", "Streamlit", "Gemini"]),
-    ("fuzion", "FUZION", "IDENTITY", "BRANDING", "BRAND!",
-     "Full visual identity system on Behance, and my most appreciated piece there.",
-     ["Branding", "Identity"]),
+    ("cpgrams", "CPGRAMS", "AI ASSISTANT", "GOV TECH", "VOICE!",
+     "Voice-first assistant for India's national grievance portal. File a complaint by talking, in your own language.",
+     ["Product Design", "Conversational UX"]),
+
 ]
 
 

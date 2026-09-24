@@ -47,7 +47,7 @@
 </p>
 <p align="center">
   <a href="https://github.com/Aayushvz/Course-finder-bot"><img src="assets/projects/coursebot.svg" width="49%" alt="Course Finder Bot"/></a>
-  <a href="https://www.behance.net/aayushvisuals"><img src="assets/projects/fuzion.svg" width="49%" alt="Fuzion Visual Identity"/></a>
+  <a href="https://aayushvisuals.com/work/cpgrams"><img src="assets/projects/cpgrams.svg" width="49%" alt="CPGRAMS AI Assistant case study"/></a>
 </p>
 
 <img src="assets/suit-divider.svg" width="100%"/>
