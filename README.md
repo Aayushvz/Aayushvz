@@ -15,7 +15,7 @@
 <div align="center">
 <a href="https://aayushvisuals.com"><img src="assets/hero-profile.svg" width="100%" alt="Hero profile: Aayush Raj, final-year B.Tech CS at VIT Vellore, freelance UI/UX and product design since 2020. Powers: UI/UX design, product design, design engineering."/></a>
 
-**Portfolio:** [aayushvisuals.com](https://aayushvisuals.com)
+<a href="https://aayushvisuals.com"><img src="assets/portfolio-cta.svg" width="70%" alt="Portfolio: aayushvisuals.com"/></a>
 </div>
 
 <img src="assets/suit-divider.svg" width="100%"/>

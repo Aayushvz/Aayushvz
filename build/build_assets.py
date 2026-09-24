@@ -841,8 +841,45 @@ def tagline():
     )
 
 
+# ---------- portfolio call-to-action ----------
+
+def portfolio_cta():
+    W, H = 1000, 170
+    sans = "font-family=\"'Segoe UI',Helvetica,Arial,sans-serif\""
+    spline = 'calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1"'
+    x, y, w, h = 20, 40, 950, 106
+    ax = x + w - 90  # arrow burst centre
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>{FONT_CSS}'
+        '<pattern id="cd" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="6" cy="6" r="2" fill="#F2C94C"/></pattern></defs>'
+        # the button
+        f'<rect x="{x + 9}" y="{y + 9}" width="{w}" height="{h}" rx="12" fill="{BLUE}" stroke="{INK}" stroke-width="5"/>'
+        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="12" fill="#FFE45C" stroke="{INK}" stroke-width="5"/>'
+        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="12" fill="url(#cd)" opacity=".6"/>'
+        f'<path d="M{x + 12} {y} H{x + 150} V{y + h} H{x + 12} A12 12 0 0 1 {x} {y + h - 12} V{y + 12} A12 12 0 0 1 {x + 12} {y}Z" '
+        f'fill="{RED}" stroke="{INK}" stroke-width="5"/>'
+        f'<text class="c" x="{x + 75}" y="{y + 70}" text-anchor="middle" font-size="46" letter-spacing="2" fill="#fff" '
+        f'stroke="{INK}" stroke-width="5" paint-order="stroke">HQ</text>'
+        f'<text class="c" x="{x + 180}" y="{y + 50}" font-size="38" letter-spacing="2" fill="{RED}" stroke="{INK}" '
+        f'stroke-width="5" paint-order="stroke">SWING BY THE PORTFOLIO</text>'
+        f'<text x="{x + 180}" y="{y + 88}" {sans} font-weight="800" font-size="30" fill="{INK}">aayushvisuals.com</text>'
+        # arrow in a burst, nudging right
+        f'<g><g transform="translate({ax} {y + h / 2})">'
+        f'<polygon points="{burst(0, 0, 44, 33, 10)}" transform="scale(.62 1)" fill="#fff" stroke="{INK}" stroke-width="4" stroke-linejoin="round"/>'
+        f'<path d="M-16 0 H14 M2 -13 L15 0 L2 13" stroke="{RED}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>'
+        f'<animateTransform attributeName="transform" type="translate" values="0 0;8 0;0 0" dur="1.2s" {spline} repeatCount="indefinite"/></g>'
+        # spider hanging off the top edge of the button
+        f'<g><line x1="{x + 700}" y1="0" x2="{x + 700}" y2="{y + 4}" stroke="#8B949E" stroke-width="2"/>'
+        f'<g transform="translate({x + 700 - 22} {y - 6}) scale(1.4)">{spider_shape(INK, 3.2)}</g>'
+        f'<g transform="translate({x + 700 - 22} {y - 6}) scale(1.4)">{spider_shape(RED, 1.9)}</g>'
+        f'<animateTransform attributeName="transform" type="translate" values="0 -26;0 -6;0 -26" dur="2.6s" {spline} repeatCount="indefinite"/></g>'
+        "</svg>"
+    )
+
+
 if __name__ == "__main__":
     ASSETS.mkdir(exist_ok=True)
+    write("portfolio-cta.svg", portfolio_cta())
     write("tagline.svg", tagline())
     write("hero-profile.svg", hero_profile())
     write("spider-signal.svg", spider_signal())
