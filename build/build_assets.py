@@ -271,8 +271,123 @@ def footer_swing():
     )
 
 
+# ---------- header banner ----------
+
+def big_web(cx, cy, r, a0, a1, rings=5, spokes=7):
+    angles = [math.radians(a0 + (a1 - a0) * i / (spokes - 1)) for i in range(spokes)]
+    out = [f'<path d="M{cx} {cy} L{cx + r * math.cos(a):.1f} {cy + r * math.sin(a):.1f}"/>' for a in angles]
+    for k in range(1, rings + 1):
+        rr = r * k / rings
+        pts = [(cx + rr * math.cos(a), cy + rr * math.sin(a)) for a in angles]
+        d = f"M{pts[0][0]:.1f} {pts[0][1]:.1f}"
+        for p0, p1 in zip(pts, pts[1:]):
+            mx, my = (p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2
+            d += f" Q{cx + (mx - cx) * 0.86:.1f} {cy + (my - cy) * 0.86:.1f} {p1[0]:.1f} {p1[1]:.1f}"
+        out.append(f'<path d="{d}"/>')
+    return "".join(out)
+
+
+def header():
+    W, H = 1400, 640
+    spline = 'calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1"'
+    once = 'fill="freeze" calcMode="spline" keySplines=".2 .9 .3 1"'
+
+    defs = (
+        f"{FONT_CSS}"
+        '<pattern id="hd" width="16" height="16" patternUnits="userSpaceOnUse">'
+        f'<circle cx="8" cy="8" r="3" fill="{BLUE}"/></pattern>'
+        '<linearGradient id="hf" x1="0" y1="0" x2="1" y2="1">'
+        '<stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+        '<mask id="hm"><rect width="1400" height="640" fill="url(#hf)"/></mask>'
+        '<clipPath id="panel"><rect x="6" y="6" width="1388" height="628" rx="22"/></clipPath>'
+    )
+
+    bg = (
+        f'<rect x="6" y="6" width="1388" height="628" rx="22" fill="#0E1526"/>'
+        f'<g clip-path="url(#panel)"><rect width="1400" height="640" fill="url(#hd)" mask="url(#hm)"/>'
+        f'<g stroke="{WEB}" stroke-width="1.6" fill="none" opacity=".45">{big_web(6, 6, 300, 0, 90)}'
+        f'{big_web(1394, 634, 230, 180, 270, 4, 6)}</g></g>'
+        f'<rect x="6" y="6" width="1388" height="628" rx="22" fill="none" stroke="{RED}" stroke-width="6"/>'
+    )
+
+    # spider dropping in on a thread, then bobbing
+    sx = 1190
+    spider = (
+        f'<g><line x1="{sx}" y1="6" x2="{sx}" y2="236" stroke="#C9D1D9" stroke-width="2.5"/>'
+        f'<g transform="translate({sx - 56} 216) scale(3.5)">{spider_shape(RED, 2)}</g>'
+        f'<animateTransform attributeName="transform" type="translate" values="0 -300;0 0" dur="1.1s" {once}/>'
+        f'<animateTransform attributeName="transform" type="translate" values="0 0;0 16;0 0" begin="1.1s" '
+        f'dur="2.6s" {spline} repeatCount="indefinite" additive="sum"/></g>'
+    )
+
+    def title_layer(dx, dy, fill, stroke=f'stroke="{INK}" stroke-width="12" paint-order="stroke"'):
+        return (
+            f'<text class="c" x="{600 + dx}" y="{250 + dy}" text-anchor="middle" font-size="210" fill="{fill}" '
+            f'stroke-linejoin="round" {stroke}>AAYUSH RAJ</text>'
+        )
+
+    title = (
+        '<g opacity="0">'
+        + title_layer(10, 10, BLUE)
+        + title_layer(0, 0, RED)
+        + '<animate attributeName="opacity" values="0;1" dur=".35s" begin=".2s" fill="freeze"/>'
+        '<animateTransform attributeName="transform" type="translate" values="-60 0;0 0" dur=".6s" begin=".2s" '
+        f'{once}/></g>'
+        f'<text class="c" x="600" y="318" text-anchor="middle" font-size="46" letter-spacing="3" fill="#fff" '
+        f'stroke="{INK}" stroke-width="6" paint-order="stroke" opacity="0">YOUR FRIENDLY NEIGHBOURHOOD PIXEL-SLINGER'
+        '<animate attributeName="opacity" values="0;1" dur=".4s" begin=".8s" fill="freeze"/></text>'
+    )
+
+    # comic narration captions
+    caps = [
+        ("WHO?", "Designer who codes", 90, -2),
+        ("BASE", "VIT Vellore, final year", 520, 1.5),
+        ("SPIDER-SENSE", "Something is 1px off.", 950, -1.5),
+    ]
+    boxes = []
+    for i, (label, body, x, rot) in enumerate(caps):
+        w, h, y = 380, 150, 400
+        begin = 1.2 + i * 0.3
+        boxes.append(
+            f'<g transform="rotate({rot} {x + w / 2} {y + h / 2})"><g opacity="0">'
+            f'<rect x="{x + 8}" y="{y + 8}" width="{w}" height="{h}" fill="{BLUE}" stroke="{INK}" stroke-width="5"/>'
+            f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="#FFE45C" stroke="{INK}" stroke-width="5"/>'
+            f'<rect x="{x}" y="{y}" width="{w}" height="46" fill="{RED}" stroke="{INK}" stroke-width="5"/>'
+            f'<text class="c" x="{x + 18}" y="{y + 36}" font-size="34" letter-spacing="2" fill="#fff">{label}</text>'
+            f'<text x="{x + 18}" y="{y + 108}" font-family="\'Segoe UI\',Helvetica,Arial,sans-serif" font-weight="700" '
+            f'font-size="27" fill="{INK}">{body}</text>'
+            f'<animate attributeName="opacity" values="0;1" dur=".2s" begin="{begin}s" fill="freeze"/>'
+            f'<animateTransform attributeName="transform" type="translate" values="0 40;0 0" dur=".45s" '
+            f'begin="{begin}s" {once}/></g></g>'
+        )
+
+    # spider-sense: jagged ticks flickering around the last caption
+    ticks = []
+    ccx, ccy = 950 + 190, 475
+    for k, a in enumerate(range(-160, 200, 40)):
+        if -20 < a < 20 or 160 < abs(a) < 200:
+            continue
+        r = math.radians(a)
+        r0x, r0y = 220, 110
+        x0, y0 = ccx + r0x * math.cos(r), ccy + r0y * math.sin(r)
+        x1, y1 = ccx + (r0x + 34) * math.cos(r), ccy + (r0y + 34) * math.sin(r)
+        mx, my = (x0 + x1) / 2 + 7 * math.sin(r), (y0 + y1) / 2 - 7 * math.cos(r)
+        ticks.append(
+            f'<path opacity="0" d="M{x0:.1f} {y0:.1f} L{mx:.1f} {my:.1f} L{x1:.1f} {y1:.1f}">'
+            f'<animate attributeName="opacity" values="0;1;0;0" keyTimes="0;.15;.4;1" dur="1.6s" '
+            f'begin="{2.2 + k * 0.08:.2f}s" repeatCount="indefinite"/></path>'
+        )
+    sense = f'<g stroke="{RED}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".9">{"".join(ticks)}</g>'
+
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>{defs}</defs>'
+        f'{bg}{spider}{title}{sense}{"".join(boxes)}</svg>'
+    )
+
+
 if __name__ == "__main__":
     ASSETS.mkdir(exist_ok=True)
+    write("header.svg", header())
     write("spider-red.svg", icon_spider(RED))
     write("spider-blue.svg", icon_spider(BLUE_LT))
     write("mask.svg", icon_mask())
