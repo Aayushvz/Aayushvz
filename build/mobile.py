@@ -8,7 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from build_assets import (  # noqa: E402
     ASSETS, BLUE, CONTACTS, DESIGN, FONT_CSS, INK, POWERS, PROFILE, PROJECTS, RED, TECH, WEB,
-    big_web, burst, footer_swing, icon_mask, icon_web, skyline, spider_shape, tagline, write, wrap,
+    big_web, burst, footer_swing, suit_divider, web_divider, icon_mask, icon_web, skyline, spider_shape, tagline, write, wrap,
 )
 
 SANS = "font-family=\"'Segoe UI',Helvetica,Arial,sans-serif\""
@@ -338,5 +338,7 @@ if __name__ == "__main__":
         write(f"m/projects/{p[0]}.svg", project_m(i, *p))
     write("m/spider-signal.svg", signal_m())
     write("m/footer-swing.svg", footer_swing(mobile=True))
+    write("m/web-divider.svg", web_divider(600))
+    write("m/suit-divider.svg", suit_divider(600))
     for c in CONTACTS:
         write(f"m/contact/{c[0]}.svg", contact_m(*c))

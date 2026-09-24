@@ -8,7 +8,7 @@
 <picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/tagline.svg"><img src="assets/tagline.svg" width="100%" alt="I design it. I build it. I swing back and fix what broke. Somewhere between Figma and VS Code, that's where I live. With great design comes great responsibility."/></picture>
 </div>
 
-<img src="assets/web-divider.svg" width="100%"/>
+<picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/web-divider.svg"><img src="assets/web-divider.svg" width="100%" alt="web strand divider"/></picture>
 
 ## <img src="assets/spider-red.svg" width="26" valign="middle"/> Roles
 
@@ -18,7 +18,7 @@
 <a href="https://aayushvisuals.com"><picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/portfolio-cta.svg"><img src="assets/portfolio-cta.svg" width="70%" alt="Portfolio: aayushvisuals.com"/></picture></a>
 </div>
 
-<img src="assets/suit-divider.svg" width="100%"/>
+<picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/suit-divider.svg"><img src="assets/suit-divider.svg" width="100%" alt="suit stripe divider"/></picture>
 
 ## <img src="assets/mask.svg" width="26" valign="middle"/> My Tech Stack
 
@@ -26,7 +26,7 @@
 <picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/techstack-web.svg"><img src="assets/techstack-web.svg" width="100%" alt="tech stack"/></picture>
 </div>
 
-<img src="assets/web-divider.svg" width="100%"/>
+<picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/web-divider.svg"><img src="assets/web-divider.svg" width="100%" alt="web strand divider"/></picture>
 
 ## <img src="assets/spider-blue.svg" width="26" valign="middle"/> Projects
 
@@ -43,13 +43,13 @@
   <a href="https://github.com/Aayushvz/Course-finder-bot"><picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/projects/coursebot.svg"><img src="assets/projects/coursebot.svg" width="49%" alt="Course Finder Bot"/></picture></a>
 </p>
 
-<img src="assets/suit-divider.svg" width="100%"/>
+<picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/suit-divider.svg"><img src="assets/suit-divider.svg" width="100%" alt="suit stripe divider"/></picture>
 
 ## <img src="assets/web.svg" width="24" valign="middle"/> Contribution Graph
 
 <picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/output/spider-contribution-graph-mobile.svg"><img src="https://raw.githubusercontent.com/Aayushvz/Aayushvz/output/spider-contribution-graph.svg" width="100%" alt="Spider-sense activity: contribution graph"/></picture>
 
-<img src="assets/web-divider.svg" width="100%"/>
+<picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/web-divider.svg"><img src="assets/web-divider.svg" width="100%" alt="web strand divider"/></picture>
 
 ## <img src="assets/spider-hanging.svg" width="22" valign="middle"/> Find Me
 

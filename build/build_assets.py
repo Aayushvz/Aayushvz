@@ -125,29 +125,67 @@ def corner_web(x, flip):
     return "".join(lines)
 
 
-def web_divider():
-    strand = "M40 6 Q700 34 1360 6"
+def web_splat(x, y, r, flip=False):
+    """Where a web shot hits: a lumpy white blob with strands flying off it."""
+    import random
+    rnd = random.Random(int(x * 7 + y))
+    pts = []
+    for i in range(14):
+        a = i / 14 * 2 * math.pi
+        rr = r * (1.0 if i % 2 == 0 else 0.62) * rnd.uniform(0.85, 1.1)
+        pts.append(f"{x + rr * math.cos(a):.1f},{y + rr * math.sin(a):.1f}")
+    rays = "".join(
+        f'<path d="M{x} {y} L{x + r * 1.9 * math.cos(a):.1f} {y + r * 1.9 * math.sin(a):.1f}"/>'
+        for a in [math.radians(d + (180 if flip else 0)) for d in (-70, -35, 0, 35, 70, 150, 210)]
+    )
     return (
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 44">'
-        f'<g stroke="{WEB}" stroke-width="1.4" fill="none" opacity=".55">'
-        f'{corner_web(0, False)}{corner_web(1400, True)}<path d="{strand}"/></g>'
-        # dew drops sitting on the strand
-        + "".join(
-            f'<circle cx="{x}" cy="{6 + 14 * (1 - ((x - 700) / 660) ** 2):.1f}" r="2.4" fill="{BLUE_LT}" opacity=".7"/>'
-            for x in (190, 420, 980, 1210)
-        )
-        + f'<g><g transform="translate(-16 -8) scale(.62)">{spider_shape(RED, 2.4)}</g>'
-        f'<animateMotion dur="14s" repeatCount="indefinite" path="{strand}" rotate="auto" '
-        'keyPoints="0;1;1;0;0" keyTimes="0;.45;.5;.95;1" calcMode="linear"/></g>'
+        f'<g stroke="{INK}" stroke-width="5" stroke-linecap="round">{rays}</g>'
+        f'<g stroke="#fff" stroke-width="2.4" stroke-linecap="round">{rays}</g>'
+        f'<polygon points="{" ".join(pts)}" fill="#fff" stroke="{INK}" stroke-width="3" stroke-linejoin="round"/>'
+    )
+
+
+def web_divider(W=1400):
+    k = W / 1400
+    H = 70
+    x0, x1, y0 = 40 * k + 14, W - 40 * k - 14, 30
+    strand = f"M{x0:.1f} {y0} Q{W / 2:.1f} {y0 + 40} {x1:.1f} {y0}"
+    twist = f"M{x0:.1f} {y0 + 2} Q{W / 2:.1f} {y0 + 36} {x1:.1f} {y0 + 2}"
+    dur = 14
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>{FONT_CSS}</defs>'
+        f'<path d="{strand}" stroke="{INK}" stroke-width="7" fill="none" stroke-linecap="round"/>'
+        f'<path d="{strand}" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>'
+        f'<path d="{twist}" stroke="#C9D1D9" stroke-width="1.5" fill="none" stroke-dasharray="10 14"/>'
+        f"{web_splat(x0, y0, 13)}{web_splat(x1, y0, 13, flip=True)}"
+        # spider hangs under the strand and walks it end to end
+        f'<g><g transform="translate(-19 -2) scale(1.2)">{spider_shape(INK, 3.2)}</g>'
+        f'<g transform="translate(-19 -2) scale(1.2)">{spider_shape(RED, 1.9)}</g>'
+        f'<animateMotion dur="{dur}s" repeatCount="indefinite" path="{strand}" '
+        'keyPoints="0.04;0.96;0.96;0.04;0.04" keyTimes="0;.45;.5;.95;1" calcMode="linear"/></g>'
+        f'<text class="c" x="{x0 + 34:.1f}" y="{y0 - 6}" font-size="26" fill="#fff" stroke="{INK}" stroke-width="5" '
+        f'paint-order="stroke" transform="rotate(-8 {x0 + 34:.1f} {y0 - 6})">THWIP!'
+        f'<animate attributeName="opacity" values="1;0;0;1" keyTimes="0;.08;.94;1" dur="{dur}s" repeatCount="indefinite"/></text>'
         "</svg>"
     )
 
 
-def suit_divider():
+def suit_divider(W=1400):
+    """A strip of suit fabric: red webbing, blue edges, spider emblem in the middle."""
+    H = 64
+    y, h = 20, 24
+    seams = "".join(
+        f'<line x1="{x}" y1="{y}" x2="{x}" y2="{y + h}"/>' for x in range(18, W, 30)
+    ) + f'<path d="M4 {y + h / 2} Q{W / 4} {y + h / 2 - 7} {W / 2} {y + h / 2} T{W - 4} {y + h / 2}"/>'
+    cx = W / 2
     return (
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 16">'
-        f'<rect x="2" y="2" width="1396" height="5" rx="2.5" fill="{RED}"/>'
-        f'<rect x="2" y="9" width="1396" height="5" rx="2.5" fill="{BLUE}"/>'
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>'
+        f'<clipPath id="sb"><rect x="3" y="{y}" width="{W - 6}" height="{h}" rx="6"/></clipPath></defs>'
+        f'<rect x="3" y="{y - 7}" width="{W - 6}" height="{h + 14}" rx="10" fill="{BLUE}" stroke="{INK}" stroke-width="3"/>'
+        f'<rect x="3" y="{y}" width="{W - 6}" height="{h}" rx="6" fill="{RED}" stroke="{INK}" stroke-width="3"/>'
+        f'<g clip-path="url(#sb)" stroke="{RED_DK}" stroke-width="2" fill="none">{seams}</g>'
+        f'<ellipse cx="{cx}" cy="{H / 2}" rx="46" ry="29" fill="{RED}" stroke="{INK}" stroke-width="4"/>'
+        f'<g transform="translate({cx - 24} {H / 2 - 26}) scale(1.5)">{spider_shape(INK, 2.6)}</g>'
         "</svg>"
     )
 
