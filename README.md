@@ -20,8 +20,9 @@
 ## <img src="assets/spider-red.svg" width="26" valign="middle"/> Roles
 
 - Final-year B.Tech CS student, VIT Vellore (2023 to 2027)
-- Product designer and design engineer, building [aayushvisuals.com](https://aayushvisuals.com)
+- Product designer and design engineer
 - Freelance creative since 2020: branding, UI/UX, motion and video
+- Portfolio: [aayushvisuals.com](https://aayushvisuals.com)
 
 <img src="assets/suit-divider.svg" width="100%"/>
 
