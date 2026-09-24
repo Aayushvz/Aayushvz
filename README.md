@@ -53,11 +53,7 @@
 
 ## <img src="assets/web.svg" width="24" valign="middle"/> Contribution Graph
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/output/spider-contribution-graph-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/output/spider-contribution-graph.svg">
-  <img alt="Spider crawling the contribution graph" src="https://raw.githubusercontent.com/Aayushvz/Aayushvz/output/spider-contribution-graph.svg">
-</picture>
+<img src="https://raw.githubusercontent.com/Aayushvz/Aayushvz/output/spider-contribution-graph.svg" width="100%" alt="Spider-sense activity: contribution graph"/>
 
 <img src="assets/web-divider.svg" width="100%"/>
 

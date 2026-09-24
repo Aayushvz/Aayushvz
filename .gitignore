@@ -1,2 +1,4 @@
 build/*.html
 build/*.png
+build/dist/
+__pycache__/

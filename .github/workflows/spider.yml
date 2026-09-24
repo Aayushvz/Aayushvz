@@ -15,14 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      # a red "spider" crawls the graph and eats contributions, drawn in suit blues
+      - uses: actions/checkout@v4
+
+      # draws the graph from live contribution data (build/contrib_graph.py)
       - name: generate spider-contribution-graph.svg
-        uses: Platane/snk@v3
-        with:
-          github_user_name: ${{ github.repository_owner }}
-          outputs: |
-            dist/spider-contribution-graph.svg?color_snake=#E23636&color_dots=#ebedf0,#c7d7fb,#8fb0f5,#4f7fe6,#1f3fa8
-            dist/spider-contribution-graph-dark.svg?color_snake=#E23636&color_dots=#161b22,#13235a,#1f3fa8,#2b59d8,#5b8def
+        run: python3 build/contrib_graph.py ${{ github.repository_owner }} dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: push svg to output branch
         uses: crazy-max/ghaction-github-pages@v4
