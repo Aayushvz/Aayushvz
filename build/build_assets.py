@@ -159,14 +159,14 @@ def suit_divider():
 DESIGN = ["Figma", "Framer", "Photoshop", "Illustrator", "After Effects", "Premiere Pro"]
 
 
-def skyline(y_base, rng_seed=7):
+def skyline(y_base, rng_seed=7, h_range=(90, 250)):
     import random
     rnd = random.Random(rng_seed)
     out, windows = [], []
     x = 6
     while x < 1394:
         w = rnd.randint(60, 130)
-        h = rnd.randint(90, 250)
+        h = rnd.randint(*h_range)
         top = y_base - h
         out.append(f'<rect x="{x}" y="{top}" width="{w}" height="{h + 10}"/>')
         if rnd.random() < 0.3:  # rooftop water tank / antenna
@@ -563,8 +563,101 @@ def project_card(idx, key, line1, line2, genre, shout, desc, tags):
     )
 
 
+# ---------- find me: spider-signal banner + comic buttons ----------
+
+def spider_signal():
+    W, H = 1400, 380
+    ox, oy = 250, H - 150  # spotlight on a rooftop
+    sx, sy, sr = 430, 130, 88  # where the signal lands in the sky
+    bldg, windows = skyline(H - 6, rng_seed=11, h_range=(40, 115))
+    beam_half = math.atan2(sr, math.dist((ox, oy), (sx, sy)))
+    ang = math.atan2(sy - oy, sx - ox)
+    far = math.dist((ox, oy), (sx, sy)) + sr
+    p1 = (ox + far * math.cos(ang - beam_half), oy + far * math.sin(ang - beam_half))
+    p2 = (ox + far * math.cos(ang + beam_half), oy + far * math.sin(ang + beam_half))
+    sway = f'values="-4 {ox} {oy};4 {ox} {oy};-4 {ox} {oy}" dur="6s" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" repeatCount="indefinite"'
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>{FONT_CSS}'
+        '<linearGradient id="beam" gradientUnits="userSpaceOnUse" '
+        f'x1="{ox}" y1="{oy}" x2="{sx}" y2="{sy}"><stop offset="0" stop-color="#FFE9A8" stop-opacity=".75"/>'
+        '<stop offset="1" stop-color="#FFE9A8" stop-opacity=".12"/></linearGradient>'
+        '<radialGradient id="halo"><stop offset=".6" stop-color="#FFE9A8" stop-opacity=".95"/>'
+        '<stop offset="1" stop-color="#FFE9A8" stop-opacity=".5"/></radialGradient>'
+        '<pattern id="sd" width="16" height="16" patternUnits="userSpaceOnUse">'
+        f'<circle cx="8" cy="8" r="3" fill="{BLUE}"/></pattern>'
+        '<linearGradient id="sf" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".45"/>'
+        '<stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+        f'<mask id="sm"><rect width="{W}" height="{H}" fill="url(#sf)"/></mask>'
+        f'<clipPath id="sc"><rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22"/></clipPath></defs>'
+        f'<rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22" fill="#0E1526"/>'
+        f'<g clip-path="url(#sc)"><rect width="{W}" height="{H}" fill="url(#sd)" mask="url(#sm)"/>'
+        # sweeping spotlight with the spider emblem on the clouds
+        f'<g><polygon points="{ox},{oy} {p1[0]:.1f},{p1[1]:.1f} {p2[0]:.1f},{p2[1]:.1f}" fill="url(#beam)"/>'
+        f'<circle cx="{sx}" cy="{sy}" r="{sr}" fill="url(#halo)"/>'
+        f'<g transform="translate({sx - 60} {sy - 60}) scale(3.75)">{spider_shape(INK, 2.2)}</g>'
+        f'<animateTransform attributeName="transform" type="rotate" {sway}/></g>'
+        f'<g fill="#16213D">{bldg}</g><g fill="#FFE45C">{windows}</g>'
+        f'<rect x="{ox - 60}" y="{oy + 14}" width="120" height="{H - oy}" fill="#1B274A"/>'
+        f'<rect x="{ox - 22}" y="{oy - 6}" width="44" height="22" rx="4" fill="#2A3558" stroke="{INK}" stroke-width="3"/></g>'
+        f'<rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22" fill="none" stroke="{RED}" stroke-width="6"/>'
+        # copy
+        f'<text class="c" x="{960 + 7}" y="{150 + 7}" text-anchor="middle" font-size="118" fill="{BLUE}" stroke="{INK}" '
+        f'stroke-width="10" stroke-linejoin="round" paint-order="stroke">NEED A HERO?</text>'
+        f'<text class="c" x="960" y="150" text-anchor="middle" font-size="118" fill="{RED}" stroke="{INK}" '
+        f'stroke-width="10" stroke-linejoin="round" paint-order="stroke">NEED A HERO?</text>'
+        f'<text class="c" x="960" y="208" text-anchor="middle" font-size="42" letter-spacing="2" fill="#fff" '
+        f'stroke="{INK}" stroke-width="6" paint-order="stroke">OR A DESIGNER WHO CODES</text>'
+        f'<g transform="rotate(-2 960 262)"><rect x="745" y="236" width="430" height="50" fill="#FFE45C" stroke="{INK}" stroke-width="4"/>'
+        f'<text class="c" x="960" y="272" text-anchor="middle" font-size="31" letter-spacing="2" fill="{INK}">'
+        "SEND THE SIGNAL. I'LL SWING BY.</text></g>"
+        "</svg>"
+    )
+
+
+CONTACTS = [
+    ("portfolio", "PORTFOLIO", RED, "web"),
+    ("behance", "BEHANCE", BLUE, "Bē"),
+    ("linkedin", "LINKEDIN", BLUE, "in"),
+    ("instagram", "INSTAGRAM", RED, "cam"),
+    ("email", "EMAIL", "#FFE45C", "mail"),
+]
+
+
+def contact_button(key, label, color, glyph):
+    W, H = 300, 100
+    ink_text = color == "#FFE45C"
+    fg = INK if ink_text else "#fff"
+    ix, iy = 50, 47
+    if glyph == "web":
+        icon = f'<g transform="translate({ix - 20} {iy - 20}) scale(1.25)">{icon_web(fg)[icon_web(fg).index(">") + 1:-6]}</g>'
+    elif glyph == "cam":
+        icon = (f'<rect x="{ix - 17}" y="{iy - 17}" width="34" height="34" rx="10" fill="none" stroke="{fg}" stroke-width="3.5"/>'
+                f'<circle cx="{ix}" cy="{iy}" r="8" fill="none" stroke="{fg}" stroke-width="3.5"/>'
+                f'<circle cx="{ix + 10}" cy="{iy - 10}" r="2.2" fill="{fg}"/>')
+    elif glyph == "mail":
+        icon = (f'<rect x="{ix - 19}" y="{iy - 13}" width="38" height="27" rx="3" fill="none" stroke="{fg}" stroke-width="3.5"/>'
+                f'<path d="M{ix - 17} {iy - 11} L{ix} {iy + 2} L{ix + 17} {iy - 11}" fill="none" stroke="{fg}" stroke-width="3.5" stroke-linejoin="round"/>')
+    else:
+        icon = (f'<text x="{ix}" y="{iy + 12}" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" '
+                f'font-weight="900" font-size="34" fill="{fg}">{glyph}</text>')
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>{FONT_CSS}</defs>'
+        f'<rect x="12" y="12" width="{W - 18}" height="{H - 18}" rx="10" fill="{INK}"/>'
+        f'<g><rect x="4" y="4" width="{W - 18}" height="{H - 18}" rx="10" fill="{color}" stroke="{INK}" stroke-width="5"/>'
+        f'<line x1="92" y1="16" x2="92" y2="{H - 26}" stroke="{fg}" stroke-opacity=".35" stroke-width="2"/>'
+        f"{icon}"
+        f'<text class="c" x="{(92 + W - 14) / 2 + 4}" y="{iy + 13}" text-anchor="middle" font-size="38" letter-spacing="2" '
+        f'fill="{fg}">{label}</text></g>'
+        "</svg>"
+    )
+
+
 if __name__ == "__main__":
     ASSETS.mkdir(exist_ok=True)
+    write("spider-signal.svg", spider_signal())
+    (ASSETS / "contact").mkdir(exist_ok=True)
+    for c in CONTACTS:
+        write(f"contact/{c[0]}.svg", contact_button(*c))
     (ASSETS / "projects").mkdir(exist_ok=True)
     for i, p in enumerate(PROJECTS):
         write(f"projects/{p[0]}.svg", project_card(i, *p))

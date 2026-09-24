@@ -60,14 +60,16 @@
 ## <img src="assets/spider-hanging.svg" width="22" valign="middle"/> Find Me
 
 <div align="center">
-
-[![Portfolio](https://img.shields.io/badge/Portfolio-E23636?style=for-the-badge&logo=vercel&logoColor=white)](https://aayushvisuals.com)
-[![Behance](https://img.shields.io/badge/Behance-2B59D8?style=for-the-badge&logo=behance&logoColor=white)](https://www.behance.net/aayushvisuals)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/aayushvisuals)
-[![Instagram](https://img.shields.io/badge/Instagram-E23636?style=for-the-badge&logo=instagram&logoColor=white)](https://instagram.com/aayushvisuals)
-[![Email](https://img.shields.io/badge/Email-0B0E14?style=for-the-badge&logo=gmail&logoColor=white)](mailto:aayushvisuals@gmail.com)
-
+<img src="assets/spider-signal.svg" width="100%" alt="Need a hero? Or a designer who codes. Send the signal."/>
 </div>
+
+<p align="center">
+  <a href="https://aayushvisuals.com"><img src="assets/contact/portfolio.svg" width="19%" alt="Portfolio"/></a>
+  <a href="https://www.behance.net/aayushvisuals"><img src="assets/contact/behance.svg" width="19%" alt="Behance"/></a>
+  <a href="https://linkedin.com/in/aayushvisuals"><img src="assets/contact/linkedin.svg" width="19%" alt="LinkedIn"/></a>
+  <a href="https://instagram.com/aayushvisuals"><img src="assets/contact/instagram.svg" width="19%" alt="Instagram"/></a>
+  <a href="mailto:aayushvisuals@gmail.com"><img src="assets/contact/email.svg" width="19%" alt="Email"/></a>
+</p>
 
 <br>
 
