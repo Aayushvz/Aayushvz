@@ -153,96 +153,158 @@ def suit_divider():
 
 
 # ---------- tech stack ----------
+# Tools are caught in a giant web over a night skyline; the spider crawls
+# from tag to tag and each tag lights up while the spider sits on it.
 
-def burst(cx, cy, r_out, r_in, n=14):
-    pts = []
-    for i in range(n * 2):
-        a = math.pi * i / n - math.pi / 2
-        # uneven spikes read as hand-drawn comic
-        r = r_out * (1 if i % 4 == 0 else 0.9) if i % 2 == 0 else r_in
-        pts.append(f"{cx + r * math.cos(a) * 1.55:.1f},{cy + r * math.sin(a):.1f}")
-    return " ".join(pts)
+DESIGN = ["Figma", "Framer", "Photoshop", "Illustrator", "After Effects", "Premiere Pro"]
+
+
+def skyline(y_base, rng_seed=7):
+    import random
+    rnd = random.Random(rng_seed)
+    out, windows = [], []
+    x = 6
+    while x < 1394:
+        w = rnd.randint(60, 130)
+        h = rnd.randint(90, 250)
+        top = y_base - h
+        out.append(f'<rect x="{x}" y="{top}" width="{w}" height="{h + 10}"/>')
+        if rnd.random() < 0.3:  # rooftop water tank / antenna
+            out.append(f'<rect x="{x + w // 2 - 2}" y="{top - 30}" width="4" height="30"/>')
+        for wy in range(top + 14, y_base - 10, 22):
+            for wx in range(x + 10, x + w - 14, 20):
+                if rnd.random() < 0.18:
+                    lit = rnd.random() < 0.35
+                    anim = ""
+                    if lit:
+                        d = rnd.uniform(3, 7)
+                        anim = (f'<animate attributeName="opacity" values=".9;.15;.9" dur="{d:.1f}s" '
+                                f'begin="{rnd.uniform(0, 4):.1f}s" repeatCount="indefinite"/>')
+                    windows.append(f'<rect x="{wx}" y="{wy}" width="8" height="10" opacity=".9">{anim}</rect>')
+        x += w + rnd.randint(2, 10)
+    return "".join(out), "".join(windows)
+
+
+def tag(x, y, name, design, i, n, total, rot):
+    w = len(name) * 17 + 44
+    h = 50
+    base = RED if design else BLUE
+    s, e = i / n, (i + 0.7) / n
+    k = f"0;{s:.4f};{s + 0.01:.4f};{e:.4f};{e + 0.01:.4f};1"
+    return (
+        f'<g transform="translate({x:.1f} {y:.1f}) rotate({rot})"><g>'
+        f'<rect x="{-w / 2 + 6:.1f}" y="{-h / 2 + 6}" width="{w}" height="{h}" rx="6" fill="{INK}"/>'
+        f'<rect x="{-w / 2:.1f}" y="{-h / 2}" width="{w}" height="{h}" rx="6" fill="{base}" stroke="{INK}" stroke-width="4">'
+        f'<animate attributeName="fill" values="{base};{base};#FFE45C;#FFE45C;{base};{base}" keyTimes="{k}" '
+        f'dur="{total}s" repeatCount="indefinite"/></rect>'
+        f'<text class="c" x="0" y="12" text-anchor="middle" font-size="34" letter-spacing="1" fill="#fff">{name}'
+        f'<animate attributeName="fill" values="#fff;#fff;{INK};{INK};#fff;#fff" keyTimes="{k}" '
+        f'dur="{total}s" repeatCount="indefinite"/></text>'
+        f'<animateTransform attributeName="transform" type="scale" values="1;1;1.15;1.08;1;1" keyTimes="{k}" '
+        f'dur="{total}s" repeatCount="indefinite"/></g></g>'
+    )
 
 
 def techstack():
-    W, H = 1400, 760
-    T = 2.2  # seconds per tech
-    N = len(TECH)
-    total = T * N
-    cx, cy = 820, 520
-    sx, sy = 330, 520  # spider at rest
-    eps = 0.001
+    W, H = 1400, 860
+    cx, cy = 700, 520
+    SX = 1.75  # web is stretched horizontally
+    per_tag = 1.6
+    n = len(TECH)
+    total = per_tag * n
 
-    halftone = (
-        '<pattern id="dots" width="14" height="14" patternUnits="userSpaceOnUse">'
-        f'<circle cx="7" cy="7" r="2.6" fill="{BLUE}"/></pattern>'
-        '<radialGradient id="fade" cx="50%" cy="50%" r="50%">'
-        '<stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>'
-        '<mask id="m"><rect width="1400" height="330" fill="url(#fade)"/></mask>'
+    defs = (
+        f"{FONT_CSS}"
+        '<pattern id="td" width="16" height="16" patternUnits="userSpaceOnUse">'
+        f'<circle cx="8" cy="8" r="3" fill="{BLUE}"/></pattern>'
+        '<linearGradient id="tf" x1="0" y1="0" x2="0" y2="1">'
+        '<stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+        '<mask id="tm"><rect width="1400" height="860" fill="url(#tf)"/></mask>'
+        '<radialGradient id="glow"><stop offset="0" stop-color="#F3EBD3" stop-opacity=".35"/>'
+        '<stop offset="1" stop-color="#F3EBD3" stop-opacity="0"/></radialGradient>'
+        f'<clipPath id="tp"><rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22"/></clipPath>'
     )
+
+    bldg, windows = skyline(H - 6)
+    scene = (
+        f'<rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22" fill="#0E1526"/>'
+        f'<g clip-path="url(#tp)"><rect width="{W}" height="{H}" fill="url(#td)" mask="url(#tm)"/>'
+        f'<circle cx="1210" cy="200" r="150" fill="url(#glow)"/>'
+        f'<circle cx="1210" cy="200" r="70" fill="#F3EBD3"/>'
+        f'<circle cx="1186" cy="182" r="11" fill="#E2D8BC"/><circle cx="1232" cy="222" r="7" fill="#E2D8BC"/>'
+        f'<g fill="#16213D">{bldg}</g><g fill="#FFE45C">{windows}</g>'
+    )
+
+    # the web: long spokes to the panel edges, sagging rings
+    spokes = [math.radians(a) for a in range(0, 360, 30)]
+    web = [f'<path d="M{cx} {cy} L{cx + 1200 * math.cos(a):.1f} {cy + 1200 * math.sin(a) / SX:.1f}"/>' for a in spokes]
+    for r in (60, 130, 200, 265, 330):
+        pts = [(cx + r * SX * math.cos(a), cy + r * math.sin(a)) for a in spokes]
+        pts.append(pts[0])
+        d = f"M{pts[0][0]:.1f} {pts[0][1]:.1f}"
+        for p0, p1 in zip(pts, pts[1:]):
+            mx, my = (p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2
+            d += f" Q{cx + (mx - cx) * 0.88:.1f} {cy + (my - cy) * 0.88:.1f} {p1[0]:.1f} {p1[1]:.1f}"
+        web.append(f'<path d="{d}"/>')
+    scene += f'<g stroke="#C9D1D9" stroke-width="2" fill="none" opacity=".35">{"".join(web)}</g></g>'
+    scene += f'<rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22" fill="none" stroke="{RED}" stroke-width="6"/>'
 
     title = (
-        f'<rect width="1400" height="330" fill="url(#dots)" mask="url(#m)"/>'
-        f'<text class="c" x="708" y="238" text-anchor="middle" font-size="168" fill="{BLUE}" '
-        f'stroke="{INK}" stroke-width="10" stroke-linejoin="round" paint-order="stroke">MY TECH-STACK</text>'
-        f'<text class="c" x="700" y="228" text-anchor="middle" font-size="168" fill="{RED}" '
-        f'stroke="{INK}" stroke-width="10" stroke-linejoin="round" paint-order="stroke">MY TECH-STACK</text>'
-        f'<text class="c" x="700" y="228" text-anchor="middle" font-size="168" fill="none" '
-        'stroke="#fff" stroke-opacity=".35" stroke-width="2">MY TECH-STACK</text>'
+        f'<text class="c" x="706" y="128" text-anchor="middle" font-size="120" fill="{BLUE}" stroke="{INK}" '
+        f'stroke-width="10" stroke-linejoin="round" paint-order="stroke">MY TECH-STACK</text>'
+        f'<text class="c" x="700" y="122" text-anchor="middle" font-size="120" fill="{RED}" stroke="{INK}" '
+        f'stroke-width="10" stroke-linejoin="round" paint-order="stroke">MY TECH-STACK</text>'
+        f'<g transform="rotate(-3 700 170)"><rect x="520" y="148" width="360" height="42" fill="#FFE45C" stroke="{INK}" stroke-width="4"/>'
+        f'<text class="c" x="700" y="178" text-anchor="middle" font-size="28" letter-spacing="2" fill="{INK}">'
+        "CAUGHT IN MY WEB</text></g>"
     )
 
-    spline = 'calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1"'
-    # thread from top + spider bobbing, synced to each tech cycle
+    # design tools form the core ring, code wraps around it
+    code = [t for t in TECH if t not in DESIGN]
+    placed = [(a, 150, name) for a, name in zip(range(-60, 300, 60), DESIGN)]
+    placed += [(a, 310, name) for a, name in zip(range(-75, 285, 30), code)]
+    placed.sort(key=lambda t: t[0] % 360)
+    points = []
+    tags = []
+    for i, (a, r, name) in enumerate(placed):
+        ra = math.radians(a)
+        x, y = cx + r * SX * math.cos(ra), cy + r * math.sin(ra) * 0.95
+        points.append((x, y - 50))  # spider perches on the top edge
+        rot = ((i * 37) % 9) - 4
+        tags.append(tag(x, y, name, name in DESIGN, i, n, total, rot))
+
+    # spider route: tag to tag, pausing on each
+    pts = points + [points[0]]
+    seg = [math.dist(p0, p1) for p0, p1 in zip(pts, pts[1:])]
+    L = sum(seg)
+    d = f"M{pts[0][0]:.1f} {pts[0][1]:.1f}" + "".join(f" L{x:.1f} {y:.1f}" for x, y in pts[1:])
+    kp, kt, acc = [], [], 0.0
+    for i in range(n):
+        kp += [acc / L, acc / L]
+        kt += [i / n, (i + 0.7) / n]
+        acc += seg[i]
+    kp.append(1)
+    kt.append(1)
+    kp_s = ";".join(f"{v:.4f}" for v in kp)
+    kt_s = ";".join(f"{v:.4f}" for v in kt)
+    route = f'<path d="{d}" stroke="#fff" stroke-width="2.5" stroke-dasharray="3 9" stroke-linecap="round" fill="none" opacity=".5"/>'
     spider = (
-        f'<g><line x1="{sx}" y1="300" x2="{sx}" y2="{sy - 10}" stroke="{WEB}" stroke-width="2.5"/>'
-        f'<g transform="translate({sx - 48} {sy - 40}) scale(3)">{spider_shape(RED, 2)}</g>'
-        f'<animateTransform attributeName="transform" type="translate" values="0 -14;0 10;0 -14" '
-        f'dur="{T}s" {spline} repeatCount="indefinite"/></g>'
+        f'<g><g transform="rotate(90) translate(-35 -40) scale(2.2)">{spider_shape(INK, 3.4)}</g>'
+        f'<g transform="rotate(90) translate(-35 -40) scale(2.2)">{spider_shape(RED, 2)}</g>'
+        f'<animateMotion dur="{total}s" repeatCount="indefinite" path="{d}" rotate="auto" '
+        f'keyPoints="{kp_s}" keyTimes="{kt_s}" calcMode="linear"/></g>'
     )
 
-    # web line shot from spider to the burst at the start of each cycle
-    shot_len = cx - 300 - sx
-    shot = (
-        f'<line x1="{sx + 40}" y1="{sy}" x2="{cx - 260}" y2="{cy}" stroke="#fff" stroke-width="3" '
-        f'stroke-linecap="round" stroke-dasharray="{shot_len} {shot_len}">'
-        f'<animate attributeName="stroke-dashoffset" values="{shot_len};0;0;{-shot_len};{-shot_len}" '
-        f'keyTimes="0;.12;.2;.32;1" dur="{T}s" repeatCount="indefinite"/></line>'
-        f'<text class="c" x="{sx + 70}" y="{sy - 70}" font-size="46" fill="#fff" stroke="{INK}" '
-        f'stroke-width="6" paint-order="stroke" transform="rotate(-8 {sx + 70} {sy - 70})">THWIP!'
-        f'<animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.05;.25;.35;1" dur="{T}s" repeatCount="indefinite"/></text>'
+    legend = (
+        f'<g transform="translate(40 800)"><rect width="26" height="26" rx="4" fill="{RED}" stroke="{INK}" stroke-width="3"/>'
+        f'<text class="c" x="36" y="22" font-size="28" fill="#fff" stroke="{INK}" stroke-width="4" paint-order="stroke">DESIGN</text>'
+        f'<rect x="140" width="26" height="26" rx="4" fill="{BLUE}" stroke="{INK}" stroke-width="3"/>'
+        f'<text class="c" x="176" y="22" font-size="28" fill="#fff" stroke="{INK}" stroke-width="4" paint-order="stroke">CODE</text></g>'
     )
-
-    pop = (
-        f'<animateTransform attributeName="transform" type="scale" values=".55;1.08;1;1;.9" '
-        f'keyTimes="0;.14;.22;.9;1" dur="{T}s" repeatCount="indefinite" additive="sum"/>'
-    )
-    burst_g = (
-        f'<g transform="translate({cx} {cy})"><g>'
-        f'<polygon points="{burst(8, 10, 205, 165)}" fill="{BLUE}" stroke="{INK}" stroke-width="7" stroke-linejoin="round"/>'
-        f'<polygon points="{burst(0, 0, 205, 165)}" fill="#FFF7E6" stroke="{INK}" stroke-width="7" stroke-linejoin="round"/>'
-        f"{pop}"
-    )
-    names = []
-    for i, name in enumerate(TECH):
-        s, e = i / N, (i + 1) / N
-        size = 88 if len(name) <= 9 else 70
-        if i == 0:
-            vals, kt = "1;1;0;0", f"0;{e - eps:.4f};{e:.4f};1"
-        elif i == N - 1:
-            vals, kt = "0;0;1;1", f"0;{s - eps:.4f};{s:.4f};1"
-        else:
-            vals, kt = "0;0;1;1;0;0", f"0;{s - eps:.4f};{s:.4f};{e - eps:.4f};{e:.4f};1"
-        names.append(
-            f'<text class="c" x="0" y="{size * 0.35:.0f}" text-anchor="middle" font-size="{size}" '
-            f'fill="{RED}" stroke="{INK}" stroke-width="5" stroke-linejoin="round" paint-order="stroke" opacity="{1 if i == 0 else 0}">'
-            f'{name}<animate attributeName="opacity" values="{vals}" keyTimes="{kt}" dur="{total}s" '
-            f'calcMode="discrete" repeatCount="indefinite"/></text>'
-        )
-    burst_g += "".join(names) + "</g></g>"
 
     return (
-        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>{FONT_CSS}{halftone}</defs>'
-        f"{title}{spider}{shot}{burst_g}</svg>"
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>{defs}</defs>'
+        f'{scene}{title}{route}{"".join(tags)}{spider}{legend}</svg>'
     )
 
 
