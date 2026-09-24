@@ -447,8 +447,127 @@ def header():
     )
 
 
+# ---------- project cards: each one a comic book cover ----------
+
+PROJECTS = [
+    ("cat", "CAT OPERATOR", "ASSISTANT", "HACKATHON", "3D!",
+     "Smart co-pilot for Cat excavator operators: 3D machine view, shift replay, safety and training.",
+     ["JavaScript", "Python"]),
+    ("invoice", "INVOICE", "GENERATOR", "WEB TOOL", "PDF!",
+     "Fill a form, pick a template, get a real PDF. No account, and no client data leaves the browser.",
+     ["Next.js", "Tailwind"]),
+    ("contract", "CONTRACT", "GENERATOR", "WEB TOOL", "FREE!",
+     "Freelance contracts in minutes on aayushvisuals.com. Fill in a form, print a ready contract.",
+     ["Next.js", "TypeScript"]),
+    ("visuals", "AAYUSH", "VISUALS", "PORTFOLIO", "SCROLL!",
+     "Cinematic single-scroll portfolio where every section is a pinned, scroll-driven moment.",
+     ["Next.js", "Framer Motion"]),
+    ("coursebot", "COURSE FINDER", "BOT", "AI", "AI!",
+     "Gemini-powered chatbot that finds courses by interest, domain, skill level and duration.",
+     ["Python", "Streamlit", "Gemini"]),
+    ("fuzion", "FUZION", "IDENTITY", "BRANDING", "BRAND!",
+     "Full visual identity system on Behance, and my most appreciated piece there.",
+     ["Branding", "Identity"]),
+]
+
+
+def burst(cx, cy, r_out, r_in, n=14):
+    pts = []
+    for i in range(n * 2):
+        a = math.pi * i / n - math.pi / 2
+        # uneven spikes read as hand-drawn comic
+        r = r_out * (1 if i % 4 == 0 else 0.9) if i % 2 == 0 else r_in
+        pts.append(f"{cx + r * math.cos(a) * 1.55:.1f},{cy + r * math.sin(a):.1f}")
+    return " ".join(pts)
+
+
+def wrap(text, width):
+    lines, cur = [], ""
+    for word in text.split():
+        if len(cur) + len(word) + 1 > width and cur:
+            lines.append(cur)
+            cur = word
+        else:
+            cur = f"{cur} {word}".strip()
+    return lines + [cur]
+
+
+def project_card(idx, key, line1, line2, genre, shout, desc, tags):
+    W, H = 700, 470
+    sans = "font-family=\"'Segoe UI',Helvetica,Arial,sans-serif\""
+    once = 'fill="freeze" calcMode="spline" keySplines=".2 .9 .3 1"'
+    delay = 0.15 * idx
+
+    def title(text, y, size):
+        return (
+            f'<text class="c" x="{40 + 7}" y="{y + 7}" font-size="{size}" fill="{BLUE}" stroke="{INK}" '
+            f'stroke-width="9" stroke-linejoin="round" paint-order="stroke">{text}</text>'
+            f'<text class="c" x="40" y="{y}" font-size="{size}" fill="{RED}" stroke="{INK}" '
+            f'stroke-width="9" stroke-linejoin="round" paint-order="stroke">{text}</text>'
+        )
+
+    size = 78 if max(len(line1), len(line2)) <= 11 else 66
+    body = "".join(
+        f'<text x="58" y="{300 + i * 32}" {sans} font-weight="700" font-size="23" fill="{INK}">{ln}</text>'
+        for i, ln in enumerate(wrap(desc, 46))
+    )
+    tag_x = 40
+    chips = []
+    for t in tags:
+        w = len(t) * 12 + 30
+        chips.append(
+            f'<rect x="{tag_x}" y="{H - 62}" width="{w}" height="34" rx="17" fill="none" stroke="#C9D1D9" stroke-width="2"/>'
+            f'<text x="{tag_x + w / 2}" y="{H - 39}" text-anchor="middle" {sans} font-weight="600" font-size="17" fill="#C9D1D9">{t}</text>'
+        )
+        tag_x += w + 10
+
+    bx, by = 585, 150
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>{FONT_CSS}'
+        '<pattern id="pd" width="14" height="14" patternUnits="userSpaceOnUse">'
+        f'<circle cx="7" cy="7" r="2.6" fill="{BLUE}"/></pattern>'
+        '<linearGradient id="pf" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/>'
+        '<stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+        f'<mask id="pm"><rect width="{W}" height="{H}" fill="url(#pf)"/></mask>'
+        f'<clipPath id="pc"><rect x="5" y="5" width="{W - 10}" height="{H - 10}" rx="18"/></clipPath></defs>'
+        f'<rect x="5" y="5" width="{W - 10}" height="{H - 10}" rx="18" fill="#0E1526"/>'
+        f'<g clip-path="url(#pc)"><rect width="{W}" height="{H}" fill="url(#pd)" mask="url(#pm)"/>'
+        f'<g stroke="{WEB}" stroke-width="1.5" fill="none" opacity=".4">{big_web(W - 5, H - 5, 200, 180, 270, 4, 5)}</g>'
+        # masthead strip
+        f'<rect x="0" y="0" width="{W}" height="62" fill="{RED}"/>'
+        f'<rect x="0" y="62" width="{W}" height="5" fill="{INK}"/>'
+        f'<text class="c" x="30" y="45" font-size="34" letter-spacing="2" fill="#fff">ISSUE #{idx + 1:02d}</text>'
+        f'<text class="c" x="{W - 30}" y="45" text-anchor="end" font-size="34" letter-spacing="2" fill="#FFE45C" '
+        f'stroke="{INK}" stroke-width="4" paint-order="stroke">{genre}</text></g>'
+        f'<rect x="5" y="5" width="{W - 10}" height="{H - 10}" rx="18" fill="none" stroke="{RED}" stroke-width="5"/>'
+        # title
+        f'<g opacity="0">{title(line1, 150, size)}{title(line2, 150 + size, size)}'
+        f'<animate attributeName="opacity" values="0;1" dur=".3s" begin="{delay:.2f}s" fill="freeze"/>'
+        f'<animateTransform attributeName="transform" type="translate" values="-40 0;0 0" dur=".5s" begin="{delay:.2f}s" {once}/></g>'
+        # shout burst, pulsing
+        f'<g transform="translate({bx} {by})"><g>'
+        f'<polygon points="{burst(5, 6, 62, 46, 11)}" fill="{BLUE}" stroke="{INK}" stroke-width="5" stroke-linejoin="round" transform="scale(.62 1)"/>'
+        f'<polygon points="{burst(0, 0, 62, 46, 11)}" fill="#FFE45C" stroke="{INK}" stroke-width="5" stroke-linejoin="round" transform="scale(.62 1)"/>'
+        f'<text class="c" x="0" y="11" text-anchor="middle" font-size="{34 if len(shout) <= 4 else 26}" fill="{RED}" '
+        f'stroke="{INK}" stroke-width="4" paint-order="stroke" transform="rotate(-8)">{shout}</text>'
+        f'<animateTransform attributeName="transform" type="scale" values="1;1.1;1" dur="1.6s" begin="{delay:.2f}s" '
+        'calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" repeatCount="indefinite"/></g></g>'
+        # narration caption
+        f'<g transform="rotate(-1 350 320)"><rect x="46" y="{258 + 6}" width="608" height="{38 + 32 * len(wrap(desc, 46))}" fill="{BLUE}" stroke="{INK}" stroke-width="4"/>'
+        f'<rect x="40" y="258" width="608" height="{38 + 32 * len(wrap(desc, 46))}" fill="#FFE45C" stroke="{INK}" stroke-width="4"/>'
+        f"{body}</g>"
+        f'{"".join(chips)}'
+        f'<text class="c" x="{W - 34}" y="{H - 36}" text-anchor="end" font-size="30" letter-spacing="2" fill="#fff">OPEN ISSUE'
+        f'<animate attributeName="fill" values="#fff;{RED};#fff" dur="2.4s" repeatCount="indefinite"/></text>'
+        "</svg>"
+    )
+
+
 if __name__ == "__main__":
     ASSETS.mkdir(exist_ok=True)
+    (ASSETS / "projects").mkdir(exist_ok=True)
+    for i, p in enumerate(PROJECTS):
+        write(f"projects/{p[0]}.svg", project_card(i, *p))
     write("header.svg", header())
     write("spider-red.svg", icon_spider(RED))
     write("spider-blue.svg", icon_spider(BLUE_LT))

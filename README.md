@@ -35,23 +35,18 @@
 
 ## <img src="assets/spider-blue.svg" width="26" valign="middle"/> Projects
 
-**[Cat Operator Assistant](https://github.com/Aayushvz/cat-operator-assistant)**
-Hackathon prototype for Cat excavator operators: 3D machine view, shift replay, safety alerts, training and task time estimation.
-
-**[Invoice Generator](https://github.com/Aayushvz/invoice-generator)**
-Free, browser-based invoice generator that outputs real PDFs. No account, and no client data leaves the browser.
-
-**[Contract Generator](https://aayushvisuals.com/contract)**
-Freelance contract tool on aayushvisuals.com. Fill in a form, get a print-ready contract.
-
-**[Aayush Visuals](https://github.com/Aayushvz/Aayush-Visuals-Website)**
-Cinematic single-scroll portfolio where every section is a pinned, scroll-driven moment.
-
-**[Course Finder Bot](https://github.com/Aayushvz/Course-finder-bot)**
-Gemini-powered chatbot in Streamlit that finds courses by interest, domain, skill level and duration.
-
-**[Fuzion Visual Identity](https://www.behance.net/aayushvisuals)**
-Brand identity system on Behance, and my most appreciated piece there.
+<p align="center">
+  <a href="https://github.com/Aayushvz/cat-operator-assistant"><img src="assets/projects/cat.svg" width="49%" alt="Cat Operator Assistant"/></a>
+  <a href="https://github.com/Aayushvz/invoice-generator"><img src="assets/projects/invoice.svg" width="49%" alt="Invoice Generator"/></a>
+</p>
+<p align="center">
+  <a href="https://aayushvisuals.com/contract"><img src="assets/projects/contract.svg" width="49%" alt="Contract Generator"/></a>
+  <a href="https://github.com/Aayushvz/Aayush-Visuals-Website"><img src="assets/projects/visuals.svg" width="49%" alt="Aayush Visuals portfolio"/></a>
+</p>
+<p align="center">
+  <a href="https://github.com/Aayushvz/Course-finder-bot"><img src="assets/projects/coursebot.svg" width="49%" alt="Course Finder Bot"/></a>
+  <a href="https://www.behance.net/aayushvisuals"><img src="assets/projects/fuzion.svg" width="49%" alt="Fuzion Visual Identity"/></a>
+</p>
 
 <img src="assets/suit-divider.svg" width="100%"/>
 
