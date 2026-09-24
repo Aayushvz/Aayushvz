@@ -32,15 +32,15 @@
 
 <p align="center">
   <a href="https://github.com/Aayushvz/cat-operator-assistant"><img src="assets/projects/cat.svg" width="49%" alt="Cat Operator Assistant"/></a>
+  <a href="https://github.com/Aayushvz/Aayush-Visuals-Website"><img src="assets/projects/visuals.svg" width="49%" alt="Aayush Visuals portfolio"/></a>
+</p>
+<p align="center">
+  <a href="https://aayushvisuals.com/work/cpgrams"><img src="assets/projects/cpgrams.svg" width="49%" alt="CPGRAMS AI Assistant case study"/></a>
   <a href="https://github.com/Aayushvz/invoice-generator"><img src="assets/projects/invoice.svg" width="49%" alt="Invoice Generator"/></a>
 </p>
 <p align="center">
   <a href="https://aayushvisuals.com/contract"><img src="assets/projects/contract.svg" width="49%" alt="Contract Generator"/></a>
-  <a href="https://github.com/Aayushvz/Aayush-Visuals-Website"><img src="assets/projects/visuals.svg" width="49%" alt="Aayush Visuals portfolio"/></a>
-</p>
-<p align="center">
   <a href="https://github.com/Aayushvz/Course-finder-bot"><img src="assets/projects/coursebot.svg" width="49%" alt="Course Finder Bot"/></a>
-  <a href="https://aayushvisuals.com/work/cpgrams"><img src="assets/projects/cpgrams.svg" width="49%" alt="CPGRAMS AI Assistant case study"/></a>
 </p>
 
 <img src="assets/suit-divider.svg" width="100%"/>

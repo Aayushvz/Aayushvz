@@ -453,22 +453,21 @@ PROJECTS = [
     ("cat", "CAT OPERATOR", "ASSISTANT", "HACKATHON", "3D!",
      "Smart co-pilot for Cat excavator operators: 3D machine view, shift replay, safety and training.",
      ["JavaScript", "Python"]),
+    ("visuals", "AAYUSH", "VISUALS", "PORTFOLIO", "SCROLL!",
+     "Cinematic single-scroll portfolio where every section is a pinned, scroll-driven moment.",
+     ["Next.js", "Framer Motion"]),
+    ("cpgrams", "CPGRAMS", "AI ASSISTANT", "GOV TECH", "VOICE!",
+     "Voice-first assistant for India's national grievance portal. File a complaint by talking, in your own language.",
+     ["Product Design", "Conversational UX"]),
     ("invoice", "INVOICE", "GENERATOR", "WEB TOOL", "PDF!",
      "Fill a form, pick a template, get a real PDF. No account, and no client data leaves the browser.",
      ["Next.js", "Tailwind"]),
     ("contract", "CONTRACT", "GENERATOR", "WEB TOOL", "FREE!",
      "Freelance contracts in minutes on aayushvisuals.com. Fill in a form, print a ready contract.",
      ["Next.js", "TypeScript"]),
-    ("visuals", "AAYUSH", "VISUALS", "PORTFOLIO", "SCROLL!",
-     "Cinematic single-scroll portfolio where every section is a pinned, scroll-driven moment.",
-     ["Next.js", "Framer Motion"]),
     ("coursebot", "COURSE FINDER", "BOT", "AI", "AI!",
      "Gemini-powered chatbot that finds courses by interest, domain, skill level and duration.",
      ["Python", "Streamlit", "Gemini"]),
-    ("cpgrams", "CPGRAMS", "AI ASSISTANT", "GOV TECH", "VOICE!",
-     "Voice-first assistant for India's national grievance portal. File a complaint by talking, in your own language.",
-     ["Product Design", "Conversational UX"]),
-
 ]
 
 
