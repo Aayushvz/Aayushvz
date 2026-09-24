@@ -652,8 +652,99 @@ def contact_button(key, label, color, glyph):
     )
 
 
+# ---------- roles: hero profile dossier ----------
+
+PROFILE = [
+    ("SECRET IDENTITY", "Aayush Raj"),
+    ("DAY JOB", "Final-year B.Tech CS, VIT Vellore (2023 to 2027)"),
+    ("ON PATROL SINCE", "2020, freelance UI/UX and product design"),
+    ("HQ", "aayushvisuals.com"),
+]
+POWERS = ["UI/UX DESIGN", "PRODUCT DESIGN", "DESIGN ENGINEERING"]
+
+
+def hero_profile():
+    W, H = 1400, 560
+    sans = "font-family=\"'Segoe UI',Helvetica,Arial,sans-serif\""
+    once = 'fill="freeze" calcMode="spline" keySplines=".2 .9 .3 1"'
+
+    # mask portrait: the mask icon scaled up, with blinking lenses
+    mask = icon_mask()
+    inner = mask[mask.index(">") + 1:-len("</svg>")]
+    eyes_at = inner.index('<path d="M5.5')
+    head, eyes = inner[:eyes_at].replace('id="h"', 'id="mh"').replace("url(#h)", "url(#mh)"), inner[eyes_at:]
+    px, py, ps = 60, 90, 10
+    portrait = (
+        f'<circle cx="{px + 16 * ps}" cy="{py + 16.5 * ps}" r="{17.5 * ps}" fill="url(#rd)" stroke="{INK}" stroke-width="6"/>'
+        f'<g transform="translate({px} {py}) scale({ps})">{head}'
+        f'<g transform="translate(16 14)"><g><g transform="translate(-16 -14)">{eyes}</g>'
+        '<animateTransform attributeName="transform" type="scale" values="1 1;1 1;1 .08;1 1" '
+        'keyTimes="0;.92;.96;1" dur="4.5s" repeatCount="indefinite"/></g></g></g>'
+    )
+    alias = (
+        f'<g transform="rotate(-3 220 480)"><rect x="56" y="{452 + 6}" width="340" height="56" fill="{BLUE}" stroke="{INK}" stroke-width="4"/>'
+        f'<rect x="50" y="452" width="340" height="56" fill="#FFE45C" stroke="{INK}" stroke-width="4"/>'
+        f'<text class="c" x="220" y="492" text-anchor="middle" font-size="32" letter-spacing="2" fill="{INK}">'
+        "ALIAS: THE PIXEL-SLINGER</text></g>"
+    )
+
+    rx = 470
+    rows = []
+    for i, (label, value) in enumerate(PROFILE):
+        y = 190 + i * 64
+        b = 0.3 + i * 0.15
+        rows.append(
+            f'<g opacity="0"><text class="c" x="{rx}" y="{y}" font-size="30" letter-spacing="2" fill="{RED}">{label}</text>'
+            f'<text x="{rx + 250}" y="{y}" {sans} font-weight="700" font-size="27" fill="#F0F3F6">{value}</text>'
+            f'<line x1="{rx}" y1="{y + 22}" x2="1350" y2="{y + 22}" stroke="#8B949E" stroke-opacity=".35" stroke-width="2" stroke-dasharray="4 8"/>'
+            f'<animate attributeName="opacity" values="0;1" dur=".3s" begin="{b:.2f}s" fill="freeze"/>'
+            f'<animateTransform attributeName="transform" type="translate" values="30 0;0 0" dur=".5s" begin="{b:.2f}s" {once}/></g>'
+        )
+
+    chips, cx = [], rx + 130
+    for i, p in enumerate(POWERS):
+        w = len(p) * 14.5 + 36
+        b = 0.9 + i * 0.15
+        color = (RED, BLUE, RED)[i]
+        chips.append(
+            f'<g transform="rotate({(-2, 1.5, -1)[i]} {cx + w / 2} 468)"><g opacity="0">'
+            f'<rect x="{cx + 6}" y="{444 + 6}" width="{w}" height="50" rx="6" fill="{INK}"/>'
+            f'<rect x="{cx}" y="444" width="{w}" height="50" rx="6" fill="{color}" stroke="{INK}" stroke-width="4"/>'
+            f'<text class="c" x="{cx + w / 2}" y="479" text-anchor="middle" font-size="28" letter-spacing="1" fill="#fff">{p}</text>'
+            f'<animate attributeName="opacity" values="0;1" dur=".2s" begin="{b:.2f}s" fill="freeze"/>'
+            f'<animateTransform attributeName="transform" type="translate" values="0 24;0 0" dur=".45s" begin="{b:.2f}s" {once}/></g></g>'
+        )
+        cx += w + 16
+
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>{FONT_CSS}'
+        '<pattern id="rd" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="#1B274A"/>'
+        f'<circle cx="6" cy="6" r="2.4" fill="{BLUE}"/></pattern>'
+        '<pattern id="hd2" width="16" height="16" patternUnits="userSpaceOnUse">'
+        f'<circle cx="8" cy="8" r="3" fill="{BLUE}"/></pattern>'
+        '<linearGradient id="hf2" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".45"/>'
+        '<stop offset=".55" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+        f'<mask id="hm2"><rect width="{W}" height="{H}" fill="url(#hf2)"/></mask>'
+        f'<clipPath id="hp"><rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22"/></clipPath></defs>'
+        f'<rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22" fill="#0E1526"/>'
+        f'<g clip-path="url(#hp)"><rect width="{W}" height="{H}" fill="url(#hd2)" mask="url(#hm2)"/>'
+        f'<g stroke="{WEB}" stroke-width="1.5" fill="none" opacity=".35">{big_web(W - 6, H - 6, 230, 180, 270, 4, 6)}</g></g>'
+        f'<rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22" fill="none" stroke="{RED}" stroke-width="6"/>'
+        f'<text class="c" x="{rx + 7}" y="{112 + 7}" font-size="96" fill="{BLUE}" stroke="{INK}" stroke-width="9" '
+        f'stroke-linejoin="round" paint-order="stroke">HERO PROFILE</text>'
+        f'<text class="c" x="{rx}" y="112" font-size="96" fill="{RED}" stroke="{INK}" stroke-width="9" '
+        f'stroke-linejoin="round" paint-order="stroke">HERO PROFILE</text>'
+        f'<g transform="rotate(8 1230 80)"><rect x="1120" y="54" width="220" height="54" rx="6" fill="none" stroke="{RED}" stroke-width="4"/>'
+        f'<text class="c" x="1230" y="93" text-anchor="middle" font-size="36" letter-spacing="3" fill="{RED}">CLASSIFIED</text></g>'
+        f'{portrait}{alias}{"".join(rows)}'
+        f'<text class="c" x="{rx}" y="480" font-size="30" letter-spacing="2" fill="{RED}">POWERS</text>'
+        f'{"".join(chips)}</svg>'
+    )
+
+
 if __name__ == "__main__":
     ASSETS.mkdir(exist_ok=True)
+    write("hero-profile.svg", hero_profile())
     write("spider-signal.svg", spider_signal())
     (ASSETS / "contact").mkdir(exist_ok=True)
     for c in CONTACTS:

@@ -19,10 +19,11 @@
 
 ## <img src="assets/spider-red.svg" width="26" valign="middle"/> Roles
 
-- Final-year B.Tech CS student, VIT Vellore (2023 to 2027)
-- Product designer and design engineer
-- Freelance creative since 2020: branding, UI/UX, motion and video
-- Portfolio: [aayushvisuals.com](https://aayushvisuals.com)
+<div align="center">
+<a href="https://aayushvisuals.com"><img src="assets/hero-profile.svg" width="100%" alt="Hero profile: Aayush Raj, final-year B.Tech CS at VIT Vellore, freelance UI/UX and product design since 2020. Powers: UI/UX design, product design, design engineering."/></a>
+
+**Portfolio:** [aayushvisuals.com](https://aayushvisuals.com)
+</div>
 
 <img src="assets/suit-divider.svg" width="100%"/>
 
