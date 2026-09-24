@@ -2,3 +2,4 @@ build/*.html
 build/*.png
 build/dist/
 __pycache__/
+build/_static/
