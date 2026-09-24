@@ -21,7 +21,7 @@ FONT_CSS = (
 )
 
 TECH = [
-    "Figma", "Framer", "Photoshop", "Illustrator", "After Effects", "Premiere Pro",
+    "Figma", "Framer", "Photoshop", "Illustrator", "After Effects", "Claude",
     "Next.js", "React", "TypeScript", "JavaScript", "GSAP", "Tailwind CSS",
     "Three.js", "Python", "Streamlit", "Gemini API", "Git", "Vercel",
 ]
@@ -156,7 +156,7 @@ def suit_divider():
 # Tools are caught in a giant web over a night skyline; the spider crawls
 # from tag to tag and each tag lights up while the spider sits on it.
 
-DESIGN = ["Figma", "Framer", "Photoshop", "Illustrator", "After Effects", "Premiere Pro"]
+DESIGN = ["Figma", "Framer", "Photoshop", "Illustrator", "After Effects", "Claude"]
 
 
 def skyline(y_base, rng_seed=7, h_range=(90, 250)):
