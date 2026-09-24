@@ -744,15 +744,18 @@ def hero_profile():
 
 # ---------- tagline: three-panel comic strip ----------
 
-def tagline():
-    W, H = 1400, 600
+def tagline(mobile=False):
+    W, H = (480, 1530) if mobile else (1400, 600)
     sans = "font-family=\"'Segoe UI',Helvetica,Arial,sans-serif\""
     spline = 'calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1"'
-    pw, ph, py, gap = 440, 360, 14, 20
-    xs = [14 + i * (pw + gap) for i in range(3)]
+    pw, ph, gap = 440, 360, 20
+    if mobile:
+        xs, ys = [20] * 3, [14 + i * (ph + gap) for i in range(3)]
+    else:
+        xs, ys = [14 + i * (pw + gap) for i in range(3)], [14] * 3
 
-    def panel(x, fill, dots, body, caption, cap_w, rot):
-        cid = f"p{x}"
+    def panel(x, py, fill, dots, body, caption, cap_w, rot):
+        cid = f"p{x}_{py}"
         return (
             f'<clipPath id="{cid}"><rect x="{x}" y="{py}" width="{pw}" height="{ph}" rx="10"/></clipPath>'
             f'<g clip-path="url(#{cid})"><rect x="{x}" y="{py}" width="{pw}" height="{ph}" fill="{fill}"/>'
@@ -765,7 +768,7 @@ def tagline():
         )
 
     # 1: a pen-tool curve drawing itself, with handles
-    x = xs[0]
+    x, py = xs[0], ys[0]
     curve = f"M{x + 70} {py + 290} C{x + 140} {py + 120} {x + 300} {py + 330} {x + 370} {py + 150}"
     p1 = (
         f'<path d="{curve}" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="520 520">'
@@ -786,7 +789,7 @@ def tagline():
     )
 
     # 2: big code brackets with a blinking caret
-    x = xs[1]
+    x, py = xs[1], ys[1]
     p2 = (
         f'<text class="c" x="{x + pw / 2 - 14}" y="{py + 262}" text-anchor="middle" font-size="190" fill="#fff" '
         f'stroke="{INK}" stroke-width="10" stroke-linejoin="round" paint-order="stroke">&lt;/&gt;</text>'
@@ -796,7 +799,7 @@ def tagline():
     )
 
     # 3: the spider swinging back over the city
-    x = xs[2]
+    x, py = xs[2], ys[2]
     bldg = []
     for i, (bw, bh) in enumerate(((70, 90), (60, 140), (90, 70), (55, 120), (80, 100), (70, 60))):
         bx = x + sum(w for w, _ in ((70, 90), (60, 140), (90, 70), (55, 120), (80, 100), (70, 60))[:i])
@@ -827,6 +830,25 @@ def tagline():
         f'<text class="c" x="700" y="576" text-anchor="middle" font-size="58" letter-spacing="1" fill="{RED}" '
         f'stroke="{INK}" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WITH GREAT DESIGN COMES GREAT RESPONSIBILITY.</text>'
     )
+    if mobile:
+        lines = ["Somewhere between Figma and", "VS Code, that's where I live.",
+                 "The suit changes. The city", "changes. The web stays."]
+        bh = 30 + 34 * len(lines)
+        narration = (
+            f'<g transform="rotate(-1 240 1260)"><rect x="27" y="1187" width="426" height="{bh}" fill="{BLUE}" stroke="{INK}" stroke-width="4"/>'
+            f'<rect x="20" y="1180" width="426" height="{bh}" fill="#FFE45C" stroke="{INK}" stroke-width="4"/>'
+            + "".join(
+                f'<text x="233" y="{1218 + i * 34}" text-anchor="middle" {sans} font-weight="700" font-size="25" fill="{INK}">{ln}</text>'
+                for i, ln in enumerate(lines)
+            )
+            + "</g>"
+        )
+        motto = "".join(
+            f'<text class="c" x="{243 + dx}" y="{1410 + i * 52 + dx}" text-anchor="middle" font-size="52" letter-spacing="1" '
+            f'fill="{fill}" stroke="{INK}" stroke-width="7" stroke-linejoin="round" paint-order="stroke">{ln}</text>'
+            for i, ln in enumerate(["WITH GREAT DESIGN", "COMES GREAT", "RESPONSIBILITY."])
+            for dx, fill in ((5, BLUE), (0, RED))
+        )
 
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>{FONT_CSS}'
@@ -834,9 +856,9 @@ def tagline():
         '<pattern id="db" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r="3" fill="#1F3FA8"/></pattern>'
         '<pattern id="dn" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r="2.4" fill="#1B274A"/></pattern>'
         "</defs>"
-        + panel(xs[0], RED, "dr", p1, "I DESIGN IT.", 230, -2)
-        + panel(xs[1], BLUE, "db", p2, "I BUILD IT.", 210, 1.5)
-        + panel(xs[2], "#0E1526", "dn", p3, "I SWING BACK &amp; FIX IT.", 340, -1.5)
+        + panel(xs[0], ys[0], RED, "dr", p1, "I DESIGN IT.", 230, -2)
+        + panel(xs[1], ys[1], BLUE, "db", p2, "I BUILD IT.", 210, 1.5)
+        + panel(xs[2], ys[2], "#0E1526", "dn", p3, "I SWING BACK &amp; FIX IT.", 340, -1.5)
         + narration + motto + "</svg>"
     )
 

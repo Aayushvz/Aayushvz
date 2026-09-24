@@ -157,10 +157,107 @@ def render(total, weeks):
     )
 
 
+def render_m(total, weeks):
+    """Phone version: last 18 weeks, big cells, stats in a 2x2 grid. Stats still cover the full year."""
+    recent = weeks[-18:]
+    W = 600
+    cell, gap = 24, 5
+    step = cell + gap
+    gx, gy = (W - len(recent) * step + gap) / 2, 260
+    hold, crawl = 3.0, 10.0
+    D = hold + crawl
+    h = hold / D
+
+    labels, last, last_c = [], None, -9
+    for c, w in enumerate(recent):
+        m = dt.date.fromisoformat(w[0]["date"]).strftime("%b").upper()
+        if m != last and c - last_c >= 3 and c < len(recent) - 1:
+            last_c = c
+            labels.append(f'<text class="c" x="{gx + c * step:.1f}" y="{gy - 14}" font-size="24" letter-spacing="1" fill="#8B949E">{m}</text>')
+        last = m
+
+    cols = []
+    for c, w in enumerate(recent):
+        t = h + (c + 0.5) / len(recent) * (1 - h - 0.02)
+        rects = "".join(
+            f'<rect x="{gx + c * step:.1f}" y="{gy + d["weekday"] * step}" width="{cell}" height="{cell}" rx="5" '
+            f'fill="{LEVELS[d["contributionLevel"]]}"/>'
+            for d in w
+        )
+        cols.append(
+            f'<g>{rects}<animate attributeName="opacity" values="1;1;.25;.25;1;1" '
+            f'keyTimes="0;{h:.4f};{h + 0.005:.4f};{t:.4f};{t + 0.01:.4f};1" dur="{D}s" repeatCount="indefinite"/></g>'
+        )
+
+    x0, x1 = gx - 20, gx + len(recent) * step + 5
+    mid = gy + 3.5 * step - gap / 2
+    pts = [(x0 + (x1 - x0) * i / 80, mid + 70 * math.sin(i / 80 * math.pi * 4)) for i in range(81)]
+    path = f"M{pts[0][0]:.1f} {pts[0][1]:.1f}" + "".join(f" L{x:.1f} {y:.1f}" for x, y in pts[1:])
+    L = sum(math.dist(a, b) for a, b in zip(pts, pts[1:]))
+    c_end = 0.98
+    trail = (
+        f'<path d="{path}" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85" '
+        f'stroke-dasharray="{L:.0f} {L + 40:.0f}"><animate attributeName="stroke-dashoffset" values="{L + 20:.0f};{L + 20:.0f};0;0" '
+        f'keyTimes="0;{h:.4f};{c_end:.4f};1" dur="{D}s" repeatCount="indefinite"/></path>'
+    )
+    spider = (
+        f'<g opacity="0"><g transform="rotate(90) translate(-30 -34) scale(1.9)">{spider_shape(INK, 3.4)}</g>'
+        f'<g transform="rotate(90) translate(-30 -34) scale(1.9)">{spider_shape(RED, 2)}</g>'
+        f'<animateMotion dur="{D}s" repeatCount="indefinite" path="{path}" rotate="auto" '
+        f'keyPoints="0;0;1;1" keyTimes="0;{h:.4f};{c_end:.4f};1" calcMode="linear"/>'
+        f'<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;{h - 0.01:.4f};{h:.4f};{c_end:.4f};1" '
+        f'dur="{D}s" repeatCount="indefinite"/></g>'
+    )
+
+    longest, current, best = streaks(weeks)
+    stats = [("TOTAL", f"{total:,}"), ("BEST DAY", f"{best}"),
+             ("LONGEST STREAK", f"{longest} days"), ("CURRENT STREAK", f"{current} days")]
+    sans = "font-family=\"'Segoe UI',Helvetica,Arial,sans-serif\""
+    boxes = []
+    by0 = gy + 7 * step + 40
+    for i, (label, value) in enumerate(stats):
+        x, y = 40 + (i % 2) * 272, by0 + (i // 2) * 130
+        boxes.append(
+            f'<g transform="rotate({(-1.5, 1.2, 1, -1.2)[i]} {x + 124} {y + 50})">'
+            f'<rect x="{x + 6}" y="{y + 6}" width="248" height="104" fill="{BLUE}" stroke="{INK}" stroke-width="4"/>'
+            f'<rect x="{x}" y="{y}" width="248" height="104" fill="#FFE45C" stroke="{INK}" stroke-width="4"/>'
+            f'<rect x="{x}" y="{y}" width="248" height="40" fill="{RED}" stroke="{INK}" stroke-width="4"/>'
+            f'<text class="c" x="{x + 12}" y="{y + 30}" font-size="26" letter-spacing="1" fill="#fff">{label}</text>'
+            f'<text x="{x + 12}" y="{y + 86}" {sans} font-weight="800" font-size="34" fill="{INK}">{value}</text></g>'
+        )
+    H = by0 + 2 * 130 + 20
+
+    def title(text, y):
+        return (
+            f'<text class="c" x="{W / 2 + 5}" y="{y + 5}" text-anchor="middle" font-size="84" fill="{BLUE}" stroke="{INK}" '
+            f'stroke-width="8" stroke-linejoin="round" paint-order="stroke">{text}</text>'
+            f'<text class="c" x="{W / 2}" y="{y}" text-anchor="middle" font-size="84" fill="{RED}" stroke="{INK}" '
+            f'stroke-width="8" stroke-linejoin="round" paint-order="stroke">{text}</text>'
+        )
+
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}"><defs>{FONT_CSS}'
+        '<pattern id="gd" width="16" height="16" patternUnits="userSpaceOnUse">'
+        f'<circle cx="8" cy="8" r="3" fill="{BLUE}"/></pattern>'
+        '<linearGradient id="gf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".45"/>'
+        '<stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+        f'<mask id="gm"><rect width="{W}" height="{H}" fill="url(#gf)"/></mask>'
+        f'<clipPath id="gp"><rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22"/></clipPath></defs>'
+        f'<rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22" fill="#0E1526"/>'
+        f'<g clip-path="url(#gp)"><rect width="{W}" height="{H}" fill="url(#gd)" mask="url(#gm)"/>'
+        f'<g stroke="{WEB}" stroke-width="1.5" fill="none" opacity=".35">{big_web(W - 6, H - 6, 220, 180, 270, 4, 6)}</g></g>'
+        f'<rect x="6" y="6" width="{W - 12}" height="{H - 12}" rx="22" fill="none" stroke="{RED}" stroke-width="6"/>'
+        f'{title("SPIDER-SENSE", 100)}{title("ACTIVITY", 180)}'
+        f'<text class="c" x="{W / 2}" y="222" text-anchor="middle" font-size="24" letter-spacing="2" fill="#8B949E">LAST 18 WEEKS</text>'
+        f'{"".join(labels)}{"".join(cols)}{trail}{spider}{"".join(boxes)}</svg>'
+    )
+
+
 if __name__ == "__main__":
     login = sys.argv[1] if len(sys.argv) > 1 else "Aayushvz"
     out = Path(sys.argv[2] if len(sys.argv) > 2 else "dist")
     out.mkdir(parents=True, exist_ok=True)
     total, weeks = fetch(login, os.environ["GITHUB_TOKEN"])
     (out / "spider-contribution-graph.svg").write_text(render(total, weeks), encoding="utf-8")
+    (out / "spider-contribution-graph-mobile.svg").write_text(render_m(total, weeks), encoding="utf-8")
     print(f"{total} contributions, {len(weeks)} weeks")
