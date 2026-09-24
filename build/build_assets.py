@@ -709,7 +709,6 @@ def spider_signal():
 
 CONTACTS = [
     ("portfolio", "PORTFOLIO", RED, "web"),
-    ("behance", "BEHANCE", BLUE, "Bē"),
     ("linkedin", "LINKEDIN", BLUE, "in"),
     ("instagram", "INSTAGRAM", RED, "cam"),
     ("email", "EMAIL", "#FFE45C", "mail"),

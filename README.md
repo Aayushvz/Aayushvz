@@ -58,11 +58,10 @@
 </div>
 
 <p align="center">
-  <a href="https://aayushvisuals.com"><picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/contact/portfolio.svg"><img src="assets/contact/portfolio.svg" width="19%" alt="Portfolio"/></picture></a>
-  <a href="https://www.behance.net/aayushvisuals"><picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/contact/behance.svg"><img src="assets/contact/behance.svg" width="19%" alt="Behance"/></picture></a>
-  <a href="https://linkedin.com/in/aayushvz"><picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/contact/linkedin.svg"><img src="assets/contact/linkedin.svg" width="19%" alt="LinkedIn"/></picture></a>
-  <a href="https://instagram.com/aayushvisuals"><picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/contact/instagram.svg"><img src="assets/contact/instagram.svg" width="19%" alt="Instagram"/></picture></a>
-  <a href="mailto:aayushvisuals@gmail.com"><picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/contact/email.svg"><img src="assets/contact/email.svg" width="19%" alt="Email"/></picture></a>
+  <a href="https://aayushvisuals.com"><picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/contact/portfolio.svg"><img src="assets/contact/portfolio.svg" width="24%" alt="Portfolio"/></picture></a>
+  <a href="https://linkedin.com/in/aayushvz"><picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/contact/linkedin.svg"><img src="assets/contact/linkedin.svg" width="24%" alt="LinkedIn"/></picture></a>
+  <a href="https://instagram.com/aayush.visuals"><picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/contact/instagram.svg"><img src="assets/contact/instagram.svg" width="24%" alt="Instagram"/></picture></a>
+  <a href="mailto:aayushvisuals@gmail.com"><picture><source media="(max-width: 767px)" srcset="https://raw.githubusercontent.com/Aayushvz/Aayushvz/main/assets/m/contact/email.svg"><img src="assets/contact/email.svg" width="24%" alt="Email"/></picture></a>
 </p>
 
 <br>
