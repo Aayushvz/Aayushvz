@@ -21,9 +21,7 @@
 
 - Final-year B.Tech CS student, VIT Vellore (2023 to 2027)
 - Product designer and design engineer, building [aayushvisuals.com](https://aayushvisuals.com)
-- Graphic Designer at Canvas & Co.
-- Design Executive, E-Cell VIT
-- Freelance creative since 2019: branding, UI/UX, motion and video
+- Freelance creative since 2020: branding, UI/UX, motion and video
 
 <img src="assets/suit-divider.svg" width="100%"/>
 
